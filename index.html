@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guitar Mode Finder — Fretboard Diagrams for All 7 Modes</title>
+<meta name="description" content="Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams. Free, fast, no ads.">
+<link rel="canonical" href="https://guitarmodefinder.com/">
+<meta property="og:title" content="Guitar Mode Finder — Fretboard Diagrams for All 7 Modes">
+<meta property="og:description" content="Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams. Free, fast, no ads.">
+<meta property="og:url" content="https://guitarmodefinder.com/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body class="">
+<header class="site-header">
+  <div class="inner">
+    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
+    <nav class="site-nav">
+      <a href="/modes/">Modes</a>
+      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <h1>Find your <em>mode</em>.<br>Play it everywhere.</h1>
+    <p>Select any mode and key — instantly see the full scale family, diatonic chords, pentatonic subset, and fretboard diagram.</p>
+    <div class="mode-selector">
+      <select id="rootSelect" aria-label="Root note"><option value="C">C</option><option value="C#">C# / Db</option><option value="D">D</option><option value="D#">D# / Eb</option><option value="E">E</option><option value="F">F</option><option value="F#">F# / Gb</option><option value="G">G</option><option value="G#">G# / Ab</option><option value="A">A</option><option value="A#">A# / Bb</option><option value="B">B</option></select>
+      <span class="in-label">in</span>
+      <select id="modeSelect" aria-label="Mode"><option value="Ionian">Ionian</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Aeolian">Aeolian</option><option value="Locrian">Locrian</option></select>
+      <button class="btn-primary" id="goBtn">Explore</button>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.5rem">Try: <a href="/modes/dorian/g-sharp/">G# Dorian</a> &middot; <a href="/modes/lydian/f/">F Lydian</a> &middot; <a href="/modes/mixolydian/a/">A Mixolydian</a></p>
+  </div>
+
+  <section class="content-section" style="margin-top:2rem">
+    <h2>Browse all modes</h2>
+    <div class="mode-grid"><a class="mode-card" href="/modes/ionian/">
+  <div class="mode-name">Ionian</div>
+  <div class="mode-desc">Happy, bright, resolved</div>
+</a>
+<a class="mode-card" href="/modes/dorian/">
+  <div class="mode-name">Dorian</div>
+  <div class="mode-desc">Soulful, minor but with hope</div>
+</a>
+<a class="mode-card" href="/modes/phrygian/">
+  <div class="mode-name">Phrygian</div>
+  <div class="mode-desc">Dark, tense, Spanish/flamenco</div>
+</a>
+<a class="mode-card" href="/modes/lydian/">
+  <div class="mode-name">Lydian</div>
+  <div class="mode-desc">Dreamy, floating, ethereal</div>
+</a>
+<a class="mode-card" href="/modes/mixolydian/">
+  <div class="mode-name">Mixolydian</div>
+  <div class="mode-desc">Bluesy, dominant, rock</div>
+</a>
+<a class="mode-card" href="/modes/aeolian/">
+  <div class="mode-name">Aeolian</div>
+  <div class="mode-desc">Melancholic, natural minor</div>
+</a>
+<a class="mode-card" href="/modes/locrian/">
+  <div class="mode-name">Locrian</div>
+  <div class="mode-desc">Unstable, tense, dissonant</div>
+</a></div>
+  </section>
+
+</main>
+<footer class="site-footer">
+  <p>
+    <a href="/">Home</a> &middot;
+    <a href="/modes/">All Modes</a> &middot;
+    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+  </p>
+  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+</footer>
+<script src="/js/ui.js" defer></script>
+</body>
+</html>

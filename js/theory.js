@@ -100,23 +100,27 @@
     return FLAT_KEYS.has(rootNote);
   }
 
+  // Determine spelling preference from the root note as typed by the user:
+  // '#' root → sharps, 'b' root → flats, natural note → conventional
+  function spellWithFlats(rootNote) {
+    if (rootNote.includes('#')) return false;
+    if (rootNote.includes('b')) return true;
+    return preferFlatsForKey(rootNote);
+  }
+
   // Given a mode root note + mode name, find the parent major scale root
   function getParentRoot(modeRoot, modeName) {
     const offset = MODE_ROOT_OFFSET[modeName];
     const idx = noteIndex(modeRoot);
     const parentIdx = ((idx - offset) + 12 * 3) % 12;
-    const useFlats = preferFlatsForKey(modeRoot) ||
-      FLAT_KEYS.has(noteAtSemitone(parentIdx, false)) ||
-      FLAT_KEYS.has(noteAtSemitone(parentIdx, true));
-    return noteAtSemitone(parentIdx, useFlats);
+    return noteAtSemitone(parentIdx, spellWithFlats(modeRoot));
   }
 
   // Build all 7 notes for a given root + mode
   function getModeNotes(root, modeName) {
     const intervals = MODE_INTERVALS[modeName];
     const rootIdx = noteIndex(root);
-    const useFlats = preferFlatsForKey(root);
-    return intervals.map(i => noteAtSemitone(rootIdx + i, useFlats));
+    return intervals.map(i => noteAtSemitone(rootIdx + i, spellWithFlats(root)));
   }
 
   // Build diatonic 7th chords for a mode
@@ -141,7 +145,7 @@
   function getModeFamily(modeRoot, modeName) {
     const parentRoot = getParentRoot(modeRoot, modeName);
     const parentIdx = noteIndex(parentRoot);
-    const useFlats = preferFlatsForKey(parentRoot);
+    const useFlats = spellWithFlats(modeRoot);
 
     return MODE_NAMES.map((name, i) => {
       const modeRootNote = noteAtSemitone(parentIdx + MODE_ROOT_OFFSET[name], useFlats);
@@ -169,9 +173,9 @@
 
   // Slug helpers for URL generation
   function noteSlug(note) {
-    return note.toLowerCase()
-      .replace('#', '-sharp')
-      .replace('b', '-flat');
+    // Only replace '#' with '-sharp'. Never treat the note B as a flat symbol.
+    // ALL_ROOTS uses sharps only, so flat slugs are not needed.
+    return note.toLowerCase().replace('#', '-sharp');
   }
 
   function modeSlug(modeName) {
