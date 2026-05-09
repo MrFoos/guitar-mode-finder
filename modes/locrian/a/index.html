@@ -1,140 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A Locrian — Scale, Chords & Fretboard | Guitar Mode Finder</title>
-<meta name="description" content="A Locrian uses the notes A A# C D D# F G. Built from A# major. Full fretboard diagram, diatonic 7th chords, pentatonic scale, and usage tips.">
+<meta name="description" content="A Locrian uses the notes A A# C D D# F G. Built from A# major. Full fretboard, diatonic 7th chords, and pentatonic scale.">
 <link rel="canonical" href="https://guitarmodefinder.com/modes/locrian/a/">
 <meta property="og:title" content="A Locrian — Scale, Chords & Fretboard | Guitar Mode Finder">
-<meta property="og:description" content="A Locrian uses the notes A A# C D D# F G. Built from A# major. Full fretboard diagram, diatonic 7th chords, pentatonic scale, and usage tips.">
+<meta property="og:description" content="A Locrian uses the notes A A# C D D# F G. Built from A# major. Full fretboard, diatonic 7th chords, and pentatonic scale.">
 <meta property="og:url" content="https://guitarmodefinder.com/modes/locrian/a/">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="">
-<header class="site-header">
-  <div class="inner">
-    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
-    <nav class="site-nav">
-      <a href="/modes/">Modes</a>
-      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+<body>
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+    <div class="rack-brand">
+      <div class="power-led-enclosure"><div class="power-led"></div></div>
+      <div>
+        <div class="brand-label-top">MODE FINDER</div>
+        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">FRETBOARD MODULE — Mk II</a>
+      </div>
+    </div>
+    <nav class="rack-nav">
+      <a href="/">MODES</a>
+      <a href="/modes/">KEYS</a>
+      <a href="/guides/how-to-use-modes.html">METHOD</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label active" id="labelNight">NIGHT</span>
+      </button>
     </nav>
   </div>
 </header>
 <main>
-  <div class="page-hero">
-    <p class="breadcrumb">
-      <a href="/">Home</a> &rsaquo;
-      <a href="/modes/">Modes</a> &rsaquo;
-      <a href="/modes/locrian/">Locrian</a> &rsaquo;
-      A Locrian
-    </p>
-    <h1>A Locrian</h1>
-    <p class="subtitle">Unstable, tense, dissonant &mdash; built from A# major</p>
-    <div class="mode-selector" style="justify-content:flex-start;margin-top:1rem">
-  <select id="rootSelect" aria-label="Root note"><option value="C">C</option><option value="C#">C# / Db</option><option value="D">D</option><option value="D#">D# / Eb</option><option value="E">E</option><option value="F">F</option><option value="F#">F# / Gb</option><option value="G">G</option><option value="G#">G# / Ab</option><option value="A" selected>A</option><option value="A#">A# / Bb</option><option value="B">B</option></select>
-  <span class="in-label">in</span>
-  <select id="modeSelect" aria-label="Mode"><option value="Ionian">Ionian</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Aeolian">Aeolian</option><option value="Locrian" selected>Locrian</option></select>
-  <button class="btn-primary" id="goBtn">Go</button>
-</div>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">CH·01 / A LOCRIAN</span>
   </div>
-
-  <section class="content-section">
-    <h2>The A# major family</h2>
-    <p class="text-muted" style="margin-bottom:0.75rem;font-size:0.9rem">
-      All 7 modes share the same parent scale (A# major). A Locrian is the VII mode.
+  <div class="page-module-body">
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/modes/">Modes</a><span class="sep">›</span>
+      <a href="/modes/locrian/">Locrian</a><span class="sep">›</span>
+      A Locrian
+    </div>
+    <div class="mode-degree-badge">VII</div>
+    <h1 class="page-hero-title">A Locrian</h1>
+    <div class="page-hero-sub">Unstable, tense, dissonant &mdash; built from A♯ major</div>
+    <div class="mode-nav-widget">
+  <select id="rootSelect" class="mode-nav-select" aria-label="Root note"><option value="C">C</option><option value="C#">C# / Db</option><option value="D">D</option><option value="D#">D# / Eb</option><option value="E">E</option><option value="F">F</option><option value="F#">F# / Gb</option><option value="G">G</option><option value="G#">G# / Ab</option><option value="A" selected>A</option><option value="A#">A# / Bb</option><option value="B">B</option></select>
+  <span class="mode-nav-sep">in</span>
+  <select id="modeSelect" class="mode-nav-select" aria-label="Mode"><option value="Ionian">Ionian</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Aeolian">Aeolian</option><option value="Locrian" selected>Locrian</option></select>
+  <button class="mode-nav-btn" id="goBtn">GO</button>
+</div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">PARENT FAMILY · A♯ MAJ</span>
+  </div>
+  <div class="page-module-body">
+    <p style="font-size:12px;color:var(--dim);margin-bottom:12px">
+      All 7 modes share the same parent scale (A♯ major). A Locrian is the VII mode.
     </p>
     <table class="mode-family-table">
 <thead>
   <tr>
-    <th>#</th>
-    <th>Mode</th>
-    <th>Diatonic chords</th>
-    <th>Mood</th>
+    <th>#</th><th>Mode</th><th>Diatonic chords</th><th>Mood</th>
   </tr>
 </thead>
-<tbody>
-  <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">I</span></td>
-    <td><a class="mode-link" href="/modes/ionian/a-sharp/">A# Ionian</a></td>
-    <td class="chord-list">A#maj7 – Cm7 – Dm7 – D#maj7 – F7 – Gm7 – Am7b5</td>
-    <td class="mood-tag">Happy, bright, resolved</td>
+<tbody>  <tr>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">I</td>
+    <td><a href="/modes/ionian/a-sharp/">A♯ Ionian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">A♯maj7 – Cm7 – Dm7 – D♯maj7 – F7 – Gm7 – Am7♭5</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Happy, bright, resolved</td>
   </tr>
   <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">II</span></td>
-    <td><a class="mode-link" href="/modes/dorian/c/">C Dorian</a></td>
-    <td class="chord-list">Cmaj7 – Dm7 – D#m7 – Fmaj7 – G7 – Am7 – A#m7b5</td>
-    <td class="mood-tag">Soulful, minor but with hope</td>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">II</td>
+    <td><a href="/modes/dorian/c/">C Dorian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">Cm7 – Dm7 – D♯maj7 – F7 – Gm7 – Am7♭5 – A♯maj7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Soulful, minor but with hope</td>
   </tr>
   <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">III</span></td>
-    <td><a class="mode-link" href="/modes/phrygian/d/">D Phrygian</a></td>
-    <td class="chord-list">Dmaj7 – D#m7 – Fm7 – Gmaj7 – A7 – A#m7 – Cm7b5</td>
-    <td class="mood-tag">Dark, tense, Spanish/flamenco</td>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">III</td>
+    <td><a href="/modes/phrygian/d/">D Phrygian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">Dm7 – D♯maj7 – F7 – Gm7 – Am7♭5 – A♯maj7 – Cm7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Dark, tense, Spanish/flamenco</td>
   </tr>
   <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">IV</span></td>
-    <td><a class="mode-link" href="/modes/lydian/d-sharp/">D# Lydian</a></td>
-    <td class="chord-list">D#maj7 – Fm7 – Gm7 – Amaj7 – A#7 – Cm7 – Dm7b5</td>
-    <td class="mood-tag">Dreamy, floating, ethereal</td>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">IV</td>
+    <td><a href="/modes/lydian/d-sharp/">D♯ Lydian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">D♯maj7 – F7 – Gm7 – Am7♭5 – A♯maj7 – Cm7 – Dm7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Dreamy, floating, ethereal</td>
   </tr>
   <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">V</span></td>
-    <td><a class="mode-link" href="/modes/mixolydian/f/">F Mixolydian</a></td>
-    <td class="chord-list">Fmaj7 – Gm7 – Am7 – Bbmaj7 – C7 – Dm7 – Ebm7b5</td>
-    <td class="mood-tag">Bluesy, dominant, rock</td>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">V</td>
+    <td><a href="/modes/mixolydian/f/">F Mixolydian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">F7 – Gm7 – Am7♭5 – B♭maj7 – Cm7 – Dm7 – E♭maj7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Bluesy, dominant, rock</td>
   </tr>
   <tr>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">VI</span></td>
-    <td><a class="mode-link" href="/modes/aeolian/g/">G Aeolian</a></td>
-    <td class="chord-list">Gmaj7 – Am7 – A#m7 – Cmaj7 – D7 – D#m7 – Fm7b5</td>
-    <td class="mood-tag">Melancholic, natural minor</td>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">VI</td>
+    <td><a href="/modes/aeolian/g/">G Aeolian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">Gm7 – Am7♭5 – A♯maj7 – Cm7 – Dm7 – D♯maj7 – F7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Melancholic, natural minor</td>
   </tr>
   <tr class="selected">
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">VII</span></td>
-    <td><a class="mode-link selected-mode" href="/modes/locrian/a/">A Locrian</a></td>
-    <td class="chord-list">Amaj7 – A#m7 – Cm7 – Dmaj7 – D#7 – Fm7 – Gm7b5</td>
-    <td class="mood-tag">Unstable, tense, dissonant</td>
-  </tr>
-</tbody>
-</table>
-  </section>
-
-  <section class="content-section">
-    <h2>A Locrian scale</h2>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">VII</td>
+    <td><a href="/modes/locrian/a/">A Locrian</a></td>
+    <td style="font-family:var(--mono);font-size:12px">Am7♭5 – A♯maj7 – Cm7 – Dm7 – D♯maj7 – F7 – Gm7</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">Unstable, tense, dissonant</td>
+  </tr></tbody>
+</table></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">SCALE · 7 NOTES · 1 ♭2 ♭3 4 ♭5 ♭6 ♭7</span>
+  </div>
+  <div class="page-module-body">
     <div class="note-pills">
-  <span class="note-pill is-root is-penta">A</span>
-  <span class="note-pill">A#</span>
+  <span class="note-pill is-root">A</span>
+  <span class="note-pill">A♯</span>
   <span class="note-pill is-penta">C</span>
   <span class="note-pill is-penta">D</span>
-  <span class="note-pill is-penta">D#</span>
+  <span class="note-pill is-penta">D♯</span>
   <span class="note-pill">F</span>
   <span class="note-pill is-penta">G</span>
 </div>
-<div class="note-legend">
-  <span><span class="swatch root"></span> Root</span>
-  <span><span class="swatch penta"></span> Pentatonic</span>
-  <span><span class="swatch scale"></span> Scale tone</span>
-</div>
-    <p class="interval-formula" style="margin-top:0.75rem">Formula: <strong>1 ♭2 ♭3 4 ♭5 ♭6 ♭7</strong></p>
+    <div class="interval-formula">Formula: 1 ♭2 ♭3 4 ♭5 ♭6 ♭7</div>
     <div class="characteristic-note">
       <strong>Characteristic note:</strong> the ♭5 (diminished fifth) makes it unstable and rarely used as a tonal center.
-    </div>
-  </section>
-
-  <section class="content-section">
-    <h2>Diatonic 7th chords</h2>
+    </div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">DIATONIC 7ths · CHORD PAD</span>
+  </div>
+  <div class="page-module-body">
     <div class="chord-row">
   <div class="chord-card tonic">
     <div class="degree">I</div>
-    <div class="chord-name">Amaj7</div>
+    <div class="chord-name">Am7♭5</div>
   </div>
   <div class="chord-card">
     <div class="degree">II</div>
-    <div class="chord-name">A#m7</div>
+    <div class="chord-name">A♯maj7</div>
   </div>
   <div class="chord-card">
     <div class="degree">III</div>
@@ -142,27 +168,30 @@
   </div>
   <div class="chord-card">
     <div class="degree">IV</div>
-    <div class="chord-name">Dmaj7</div>
+    <div class="chord-name">Dm7</div>
   </div>
   <div class="chord-card">
     <div class="degree">V</div>
-    <div class="chord-name">D#7</div>
+    <div class="chord-name">D♯maj7</div>
   </div>
   <div class="chord-card">
     <div class="degree">VI</div>
-    <div class="chord-name">Fm7</div>
+    <div class="chord-name">F7</div>
   </div>
   <div class="chord-card">
     <div class="degree">VII</div>
-    <div class="chord-name">Gm7b5</div>
+    <div class="chord-name">Gm7</div>
   </div>
 </div>
-    <p class="play-over-hint">Play A Locrian over Amaj7 and D#7 progressions.</p>
-  </section>
-
-  <section class="content-section">
-    <h2>Fretboard</h2>
-    <div class="fretboard-full"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 310" class="fretboard-full-svg" role="img" aria-label="A scale fretboard diagram">
+    <div class="play-over-hint">▸ Play A Locrian over <strong>Am7♭5</strong> and <strong>F7</strong> progressions.</div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">FRETBOARD · STANDARD TUNING · 15F</span><span class="rack-module-status">● LIVE</span>
+  </div>
+  <div class="page-module-body"><div class="fretboard-full"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 310" class="fretboard-full-svg" role="img" aria-label="A scale fretboard diagram">
 <rect width="1050" height="310" fill="#252545" rx="8"/>
 <rect x="0.5" y="0.5" width="1049" height="309" fill="none" stroke="#3e3e62" stroke-width="1" rx="7.5"/>
 <line x1="60" y1="28.0" x2="1042" y2="28.0" stroke="#3c3c58" stroke-width="0.60"/>
@@ -311,45 +340,41 @@
 <text x="936.8" y="256.0" font-family="system-ui,sans-serif" font-size="15" fill="#111128" text-anchor="middle" dominant-baseline="central" font-weight="700">F</text>
 <circle cx="1006.9" cy="119.2" r="16" fill="#b91c1c" stroke="#ef4444" stroke-width="1.5"/>
 <text x="1006.9" y="119.2" font-family="system-ui,sans-serif" font-size="15" fill="white" text-anchor="middle" dominant-baseline="central" font-weight="700">A</text>
-</svg></div>
-<div class="note-legend" style="margin-top:0.6rem">
-  <span><span class="swatch root"></span> Root</span>
-  <span><span class="swatch penta"></span> Pentatonic</span>
-  <span><span class="swatch scale"></span> Scale tone</span>
+</svg></div></div>
 </div>
-  </section>
-
-  <section class="content-section">
-    <h2>Sound &amp; usage</h2>
-    <div class="mood-block">
-      <div class="mood-tag">Unstable, tense, dissonant</div>
-      <h3>Where to use A Locrian</h3>
-      <p>Metal, jazz, used sparingly</p>
-      <ul class="examples-list">
-        <li>Half-diminished chord contexts</li>
-        <li>Metallica solos</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="content-section">
-  <h2>Related</h2>
-  <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
-    <a class="key-chip" href="/modes/locrian/g-sharp/">&larr; G# Locrian</a>
-    <a class="key-chip" href="/modes/locrian/a-sharp/">A# Locrian &rarr;</a>
-    <a class="key-chip" href="/modes/aeolian/a/">A Aeolian</a>
-    <a class="key-chip" href="/modes/ionian/a/">A Ionian</a>
-    <a class="key-chip" href="/modes/locrian/">All Locrian keys</a>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">CHARACTER · UNSTABLE, TENSE, DISSONANT</span>
   </div>
-</section>
+  <div class="page-module-body">
+    <div class="mood-tag">UNSTABLE, TENSE, DISSONANT</div>
+    <h3>Where to use A Locrian</h3>
+    <p>Metal, jazz, used sparingly</p>
+    <ul class="examples-list-static">
+      <li>Half-diminished chord contexts</li>
+      <li>Metallica solos</li>
+    </ul></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">RELATED KEYS</span>
+  </div>
+  <div class="page-module-body"><div class="related-links">
+  <a class="key-chip" href="/modes/locrian/g-sharp/">← G♯ Locrian</a>
+  <a class="key-chip" href="/modes/locrian/a-sharp/">A♯ Locrian →</a>
+  <a class="key-chip" href="/modes/aeolian/a/">A Aeolian</a>
+  <a class="key-chip" href="/modes/ionian/a/">A Ionian</a>
+  <a class="key-chip" href="/modes/locrian/">All Locrian keys</a>
+</div></div>
+</div>
+  </div>
 </main>
-<footer class="site-footer">
-  <p>
-    <a href="/">Home</a> &middot;
-    <a href="/modes/">All Modes</a> &middot;
-    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
-  </p>
-  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+<footer class="rack-footer">
+  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
 </footer>
 <script src="/js/ui.js" defer></script>
 </body>

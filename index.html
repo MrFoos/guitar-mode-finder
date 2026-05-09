@@ -1,83 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guitar Mode Finder — Fretboard Diagrams for All 7 Modes</title>
+<title>Guitar Mode Finder — Fretboard Module Mk II</title>
 <meta name="description" content="Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams. Free, fast, no ads.">
 <link rel="canonical" href="https://guitarmodefinder.com/">
-<meta property="og:title" content="Guitar Mode Finder — Fretboard Diagrams for All 7 Modes">
-<meta property="og:description" content="Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams. Free, fast, no ads.">
+<meta property="og:title" content="Guitar Mode Finder — Fretboard Module Mk II">
+<meta property="og:description" content="Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams.">
 <meta property="og:url" content="https://guitarmodefinder.com/">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="">
-<header class="site-header">
-  <div class="inner">
-    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
-    <nav class="site-nav">
-      <a href="/modes/">Modes</a>
-      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+<body>
+
+<!-- ── Sticky Header Rack Bar ─────────────────────────────────────────────── -->
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+
+    <div class="rack-brand">
+      <div class="power-led-enclosure">
+        <div class="power-led"></div>
+      </div>
+      <div>
+        <div class="brand-label-top">MODE FINDER</div>
+        <div class="brand-label-main">FRETBOARD MODULE — Mk II</div>
+      </div>
+    </div>
+
+    <nav class="rack-nav">
+      <a href="/" class="active">MODES</a>
+      <a href="/modes/">KEYS</a>
+      <a href="/guides/how-to-use-modes.html">METHOD</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label active" id="labelNight">NIGHT</span>
+      </button>
     </nav>
   </div>
 </header>
-<main>
-  <div class="hero">
-    <h1>Find your <em>mode</em>.<br>Play it everywhere.</h1>
-    <p>Select any mode and key — instantly see the full scale family, diatonic chords, pentatonic subset, and fretboard diagram.</p>
-    <div class="mode-selector">
-      <select id="rootSelect" aria-label="Root note"><option value="C">C</option><option value="C#">C# / Db</option><option value="D">D</option><option value="D#">D# / Eb</option><option value="E">E</option><option value="F">F</option><option value="F#">F# / Gb</option><option value="G">G</option><option value="G#">G# / Ab</option><option value="A">A</option><option value="A#">A# / Bb</option><option value="B">B</option></select>
-      <span class="in-label">in</span>
-      <select id="modeSelect" aria-label="Mode"><option value="Ionian">Ionian</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Aeolian">Aeolian</option><option value="Locrian">Locrian</option></select>
-      <button class="btn-primary" id="goBtn">Explore</button>
+
+<!-- ── Rack Modules ─────────────────────────────────────────────────────────── -->
+<main class="rack">
+
+  <!-- CH·01 SCALE LOOKUP -->
+  <div class="rack-module" id="mod-lookup">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title">CH·01 / SCALE LOOKUP</span>
+      <span class="rack-module-status">● ARMED</span>
     </div>
-    <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.5rem">Try: <a href="/modes/dorian/g-sharp/">G# Dorian</a> &middot; <a href="/modes/lydian/f/">F Lydian</a> &middot; <a href="/modes/mixolydian/a/">A Mixolydian</a></p>
+    <div class="rack-module-body">
+      <div class="lookup-grid">
+        <div class="lookup-controls">
+          <div class="knob-wrap" id="root-knob"></div>
+          <div class="knob-wrap" id="mode-knob"></div>
+          <button class="engage-btn" id="engageBtn">ENGAGE</button>
+        </div>
+        <div class="lookup-readout">
+          <div class="led-display" id="led-display">
+            <div class="led-header-row"><span>NOW PLAYING</span><span id="led-degree">DEG · I</span></div>
+            <div class="led-mode-name" id="led-name">C IONIAN</div>
+            <div class="led-parent-row" id="led-parent">parent · C MAJ · C D E F G A B</div>
+          </div>
+          <div class="vu-meter" id="vu-meter"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <section class="content-section" style="margin-top:2rem">
-    <h2>Browse all modes</h2>
-    <div class="mode-grid"><a class="mode-card" href="/modes/ionian/">
-  <div class="mode-name">Ionian</div>
-  <div class="mode-desc">Happy, bright, resolved</div>
-</a>
-<a class="mode-card" href="/modes/dorian/">
-  <div class="mode-name">Dorian</div>
-  <div class="mode-desc">Soulful, minor but with hope</div>
-</a>
-<a class="mode-card" href="/modes/phrygian/">
-  <div class="mode-name">Phrygian</div>
-  <div class="mode-desc">Dark, tense, Spanish/flamenco</div>
-</a>
-<a class="mode-card" href="/modes/lydian/">
-  <div class="mode-name">Lydian</div>
-  <div class="mode-desc">Dreamy, floating, ethereal</div>
-</a>
-<a class="mode-card" href="/modes/mixolydian/">
-  <div class="mode-name">Mixolydian</div>
-  <div class="mode-desc">Bluesy, dominant, rock</div>
-</a>
-<a class="mode-card" href="/modes/aeolian/">
-  <div class="mode-name">Aeolian</div>
-  <div class="mode-desc">Melancholic, natural minor</div>
-</a>
-<a class="mode-card" href="/modes/locrian/">
-  <div class="mode-name">Locrian</div>
-  <div class="mode-desc">Unstable, tense, dissonant</div>
-</a></div>
-  </section>
+  <!-- CH·02 FRETBOARD -->
+  <div class="rack-module" id="mod-fretboard">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title">FRETBOARD · STANDARD TUNING · 15F</span>
+      <span class="rack-module-status">● LIVE</span>
+    </div>
+    <div class="rack-module-body">
+      <div class="fretboard-svg-wrap" id="fretboard-wrap"></div>
+      <div class="fretboard-legend" id="fretboard-legend"></div>
+    </div>
+  </div>
+
+  <!-- CH·03 SCALE STRIP -->
+  <div class="rack-module" id="mod-scale">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title" id="scale-title">SCALE · 7 NOTES · INTERVAL FORMULA</span>
+    </div>
+    <div class="rack-module-body">
+      <div class="scale-strip" id="scale-strip"></div>
+    </div>
+  </div>
+
+  <!-- CH·04 two-column row -->
+  <div class="rack-row">
+    <!-- CH·04a CHORD PAD -->
+    <div class="rack-module" id="mod-chords">
+      <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+      <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+      <div class="rack-module-header">
+        <span class="rack-module-title">DIATONIC 7ths · CHORD PAD</span>
+      </div>
+      <div class="rack-module-body">
+        <div class="chord-pad-grid" id="chord-pad"></div>
+        <div class="vamp-hint" id="vamp-hint"></div>
+      </div>
+    </div>
+
+    <!-- CH·04b PARENT FAMILY -->
+    <div class="rack-module" id="mod-family">
+      <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+      <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+      <div class="rack-module-header">
+        <span class="rack-module-title" id="family-title">PARENT FAMILY · C MAJ</span>
+      </div>
+      <div class="rack-module-body">
+        <div class="family-list" id="family-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH·05 CHARACTER -->
+  <div class="rack-module" id="mod-character">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title" id="char-title">CHARACTER · BRIGHT, RESOLVED</span>
+    </div>
+    <div class="rack-module-body">
+      <div class="character-grid" id="character-grid"></div>
+    </div>
+  </div>
+
+  <!-- CH·06 ALL MODES QUICK SWITCH -->
+  <div class="rack-module" id="mod-modes">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title">ALL MODES · QUICK SWITCH</span>
+    </div>
+    <div class="rack-module-body">
+      <div class="modes-strip" id="modes-strip"></div>
+    </div>
+  </div>
 
 </main>
-<footer class="site-footer">
-  <p>
-    <a href="/">Home</a> &middot;
-    <a href="/modes/">All Modes</a> &middot;
-    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
-  </p>
-  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+
+<footer class="rack-footer">
+  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
 </footer>
-<script src="/js/ui.js" defer></script>
+
+<script src="/js/theory.js"></script>
+<script src="/js/ui.js"></script>
 </body>
 </html>
