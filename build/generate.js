@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-// generate.js — Pre-renders all 84 mode pages + sitemap.xml
-// Run: node build/generate.js
+// generate.js — Pre-renders all mode pages + sitemap.xml
 
 const fs = require('fs');
 const path = require('path');
@@ -10,6 +9,24 @@ const CAGED = require('../js/caged.js');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const SITE_URL = 'https://guitarmodefinder.com';
+
+// ── Correct diatonic 7th chords (theory.js uses Ionian quality for all modes) ──
+
+const CHORD_QUALITY_BY_MODE = {
+  Ionian:     ['maj7','m7','m7','maj7','7','m7','m7b5'],
+  Dorian:     ['m7','m7','maj7','7','m7','m7b5','maj7'],
+  Phrygian:   ['m7','maj7','7','m7','m7b5','maj7','m7'],
+  Lydian:     ['maj7','7','m7','m7b5','maj7','m7','m7'],
+  Mixolydian: ['7','m7','m7b5','maj7','m7','m7','maj7'],
+  Aeolian:    ['m7','m7b5','maj7','m7','m7','maj7','7'],
+  Locrian:    ['m7b5','maj7','m7','m7','maj7','7','m7'],
+};
+
+function getDiatonicChords(root, modeName) {
+  const notes = Theory.getModeNotes(root, modeName);
+  const q = CHORD_QUALITY_BY_MODE[modeName];
+  return notes.map((note, i) => ({ root: note, quality: q[i], name: note + q[i], degree: i + 1 }));
+}
 
 // ── Utilities ────────────────────────────────────────────────────────────────
 
@@ -26,11 +43,15 @@ function romanNumeral(n) {
   return ['I','II','III','IV','V','VI','VII'][n - 1];
 }
 
+function disp(n) {
+  return n.replace('#', '♯').replace(/([A-G])b/g, '$1♭').replace('b5', '♭5');
+}
+
 // ── HTML shell ────────────────────────────────────────────────────────────────
 
-function htmlShell({ title, description, canonicalPath, bodyClass, content, ogImage }) {
+function htmlShell({ title, description, canonicalPath, content }) {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,10 +63,10 @@ function htmlShell({ title, description, canonicalPath, bodyClass, content, ogIm
 <meta property="og:url" content="${SITE_URL}${canonicalPath}">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="${'/css/main.css'}">
+<link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="${bodyClass || ''}">
+<body>
 ${siteHeader()}
 ${content}
 ${siteFooter()}
@@ -55,49 +76,68 @@ ${siteFooter()}
 }
 
 function siteHeader() {
-  return `<header class="site-header">
-  <div class="inner">
-    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
-    <nav class="site-nav">
-      <a href="/modes/">Modes</a>
-      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+  return `<header class="rack-header">
+  <div class="rack-header-inner">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+    <div class="rack-brand">
+      <div class="power-led-enclosure"><div class="power-led"></div></div>
+      <div>
+        <div class="brand-label-top">MODE FINDER</div>
+        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">FRETBOARD MODULE — Mk II</a>
+      </div>
+    </div>
+    <nav class="rack-nav">
+      <a href="/">MODES</a>
+      <a href="/modes/">KEYS</a>
+      <a href="/guides/how-to-use-modes.html">METHOD</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label active" id="labelNight">NIGHT</span>
+      </button>
     </nav>
   </div>
 </header>`;
 }
 
 function siteFooter() {
-  return `<footer class="site-footer">
-  <p>
-    <a href="/">Home</a> &middot;
-    <a href="/modes/">All Modes</a> &middot;
-    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
-  </p>
-  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+  return `<footer class="rack-footer">
+  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
 </footer>`;
+}
+
+// ── Mode page navigate widget ────────────────────────────────────────────────
+
+function renderModeSelector(currentRoot, currentMode) {
+  const rootOptions = Theory.ROOT_DISPLAY.map(r =>
+    `<option value="${r.value}"${r.value === currentRoot ? ' selected' : ''}>${r.label}</option>`
+  ).join('');
+  const modeOptions = Theory.MODE_NAMES.map(m =>
+    `<option value="${m}"${m === currentMode ? ' selected' : ''}>${m}</option>`
+  ).join('');
+
+  return `<div class="mode-nav-widget">
+  <select id="rootSelect" class="mode-nav-select" aria-label="Root note">${rootOptions}</select>
+  <span class="mode-nav-sep">in</span>
+  <select id="modeSelect" class="mode-nav-select" aria-label="Mode">${modeOptions}</select>
+  <button class="mode-nav-btn" id="goBtn">GO</button>
+</div>`;
 }
 
 // ── Note pills ────────────────────────────────────────────────────────────────
 
 function renderNotePills(notes, rootNote, pentaNotes) {
-  const pentaSet = new Set(pentaNotes.map(n => Theory.noteIndex(n)));
-  const rootIdx = Theory.noteIndex(rootNote);
-
+  const pentaSet = new Set(pentaNotes);
   return `<div class="note-pills">
-${notes.map(note => {
-    const idx = Theory.noteIndex(note);
-    const isRoot = idx === rootIdx;
-    const isPenta = pentaSet.has(idx);
-    let cls = 'note-pill';
-    if (isRoot) cls += ' is-root';
-    if (isPenta) cls += ' is-penta';
-    return `  <span class="${cls}">${note}</span>`;
+${notes.map(n => {
+    const isRoot = Theory.noteIndex(n) === Theory.noteIndex(rootNote);
+    const isPenta = !isRoot && pentaSet.has(n);
+    const cls = isRoot ? 'note-pill is-root' : isPenta ? 'note-pill is-penta' : 'note-pill';
+    return `  <span class="${cls}">${disp(n)}</span>`;
   }).join('\n')}
-</div>
-<div class="note-legend">
-  <span><span class="swatch root"></span> Root</span>
-  <span><span class="swatch penta"></span> Pentatonic</span>
-  <span><span class="swatch scale"></span> Scale tone</span>
 </div>`;
 }
 
@@ -109,7 +149,7 @@ ${chords.map((ch, i) => {
     const cls = i === 0 ? 'chord-card tonic' : 'chord-card';
     return `  <div class="${cls}">
     <div class="degree">${romanNumeral(ch.degree)}</div>
-    <div class="chord-name">${ch.name}</div>
+    <div class="chord-name">${disp(ch.name)}</div>
   </div>`;
   }).join('\n')}
 </div>`;
@@ -119,43 +159,45 @@ ${chords.map((ch, i) => {
 
 function renderModeFamilyTable(family, currentRoot, currentMode) {
   const rows = family.map(m => {
-    const isSelected = m.name === currentMode && Theory.noteIndex(m.root) === Theory.noteIndex(currentRoot);
+    const isSel = m.name === currentMode && Theory.noteIndex(m.root) === Theory.noteIndex(currentRoot);
     const url = `/modes/${Theory.modeSlug(m.name)}/${Theory.noteSlug(m.root)}/`;
-    const chordNames = m.chords.map(c => c.name).join(' – ');
-    const trClass = isSelected ? ' class="selected"' : '';
-    const linkClass = isSelected ? 'mode-link selected-mode' : 'mode-link';
-    return `  <tr${trClass}>
-    <td><span class="font-mono text-muted" style="font-size:0.78rem">${romanNumeral(m.degreeInParent)}</span></td>
-    <td><a class="${linkClass}" href="${url}">${m.root} ${m.name}</a></td>
-    <td class="chord-list">${chordNames}</td>
-    <td class="mood-tag">${m.mood.mood}</td>
+    const chordNames = getDiatonicChords(m.root, m.name).map(c => disp(c.name)).join(' – ');
+    return `  <tr${isSel ? ' class="selected"' : ''}>
+    <td class="font-mono" style="font-size:10px;letter-spacing:.1em">${romanNumeral(m.degreeInParent)}</td>
+    <td><a href="${url}">${disp(m.root)} ${m.name}</a></td>
+    <td style="font-family:var(--mono);font-size:12px">${chordNames}</td>
+    <td style="font-style:italic;color:var(--dim);font-size:12px">${m.mood.mood}</td>
   </tr>`;
   });
 
   return `<table class="mode-family-table">
 <thead>
   <tr>
-    <th>#</th>
-    <th>Mode</th>
-    <th>Diatonic chords</th>
-    <th>Mood</th>
+    <th>#</th><th>Mode</th><th>Diatonic chords</th><th>Mood</th>
   </tr>
 </thead>
-<tbody>
-${rows.join('\n')}
-</tbody>
+<tbody>${rows.join('\n')}</tbody>
 </table>`;
 }
 
-// ── Fretboard diagram ─────────────────────────────────────────────────────────
+// ── Fretboard ─────────────────────────────────────────────────────────────────
 
 function renderFretboardSection(rootNote, modeData) {
   const svg = CAGED.renderFullFretboardSVG(rootNote, modeData.notes, modeData.pentaNotes);
-  return `<div class="fretboard-full">${svg}</div>
-<div class="note-legend" style="margin-top:0.6rem">
-  <span><span class="swatch root"></span> Root</span>
-  <span><span class="swatch penta"></span> Pentatonic</span>
-  <span><span class="swatch scale"></span> Scale tone</span>
+  return `<div class="fretboard-full">${svg}</div>`;
+}
+
+// ── Rack module wrapper ───────────────────────────────────────────────────────
+
+function pageModule(title, body, status) {
+  const statusHtml = status ? `<span class="rack-module-status">${status}</span>` : '';
+  return `<div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">${title}</span>${statusHtml}
+  </div>
+  <div class="page-module-body">${body}</div>
 </div>`;
 }
 
@@ -164,93 +206,72 @@ function renderFretboardSection(rootNote, modeData) {
 function buildModePage(rootNote, modeName) {
   const family = Theory.getModeFamily(rootNote, modeName);
   const modeData = family.find(m => m.name === modeName);
-  const chords = modeData.chords;
   const parentRoot = modeData.parentRoot;
 
   const title = `${rootNote} ${modeName} — Scale, Chords & Fretboard | Guitar Mode Finder`;
-  const description = `${rootNote} ${modeName} uses the notes ${modeData.notes.join(' ')}. Built from ${parentRoot} major. Full fretboard diagram, diatonic 7th chords, pentatonic scale, and usage tips.`;
+  const description = `${rootNote} ${modeName} uses the notes ${modeData.notes.join(' ')}. Built from ${parentRoot} major. Full fretboard, diatonic 7th chords, and pentatonic scale.`;
   const canonicalPath = `/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(rootNote)}/`;
 
-  const playOverChord = chords[0].name;
+  const chords = getDiatonicChords(rootNote, modeName);
   const dominantChord = chords.find(c => c.quality === '7');
   const playOverHint = dominantChord
-    ? `Play ${rootNote} ${modeName} over ${playOverChord} and ${dominantChord.name} progressions.`
-    : `Play ${rootNote} ${modeName} over ${playOverChord} chord.`;
+    ? `▸ Play ${disp(rootNote)} ${modeName} over <strong>${disp(chords[0].name)}</strong> and <strong>${disp(dominantChord.name)}</strong> progressions.`
+    : `▸ Play ${disp(rootNote)} ${modeName} over <strong>${disp(chords[0].name)}</strong> chord.`;
 
-  const content = `<main>
-  <div class="page-hero">
-    <p class="breadcrumb">
-      <a href="/">Home</a> &rsaquo;
-      <a href="/modes/">Modes</a> &rsaquo;
-      <a href="/modes/${Theory.modeSlug(modeName)}/">${modeName}</a> &rsaquo;
-      ${rootNote} ${modeName}
+  const heroBody = `
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="sep">›</span>
+      <a href="/modes/">Modes</a><span class="sep">›</span>
+      <a href="/modes/${Theory.modeSlug(modeName)}/">${modeName}</a><span class="sep">›</span>
+      ${disp(rootNote)} ${modeName}
+    </div>
+    <div class="mode-degree-badge">${romanNumeral(modeData.degreeInParent)}</div>
+    <h1 class="page-hero-title">${disp(rootNote)} ${modeName}</h1>
+    <div class="page-hero-sub">${modeData.mood.mood} &mdash; built from ${disp(parentRoot)} major</div>
+    ${renderModeSelector(rootNote, modeName)}`;
+
+  const familyBody = `
+    <p style="font-size:12px;color:var(--dim);margin-bottom:12px">
+      All 7 modes share the same parent scale (${disp(parentRoot)} major). ${disp(rootNote)} ${modeName} is the ${romanNumeral(modeData.degreeInParent)} mode.
     </p>
-    <h1>${rootNote} ${modeName}</h1>
-    <p class="subtitle">${modeData.mood.mood} &mdash; built from ${parentRoot} major</p>
-    ${renderModeSelector(rootNote, modeName)}
-  </div>
+    ${renderModeFamilyTable(family, rootNote, modeName)}`;
 
-  <section class="content-section">
-    <h2>The ${parentRoot} major family</h2>
-    <p class="text-muted" style="margin-bottom:0.75rem;font-size:0.9rem">
-      All 7 modes share the same parent scale (${parentRoot} major). ${rootNote} ${modeName} is the ${romanNumeral(modeData.degreeInParent)} mode.
-    </p>
-    ${renderModeFamilyTable(family, rootNote, modeName)}
-  </section>
-
-  <section class="content-section">
-    <h2>${rootNote} ${modeName} scale</h2>
+  const scaleBody = `
     ${renderNotePills(modeData.notes, rootNote, modeData.pentaNotes)}
-    <p class="interval-formula" style="margin-top:0.75rem">Formula: <strong>${modeData.formula}</strong></p>
+    <div class="interval-formula">Formula: ${modeData.formula}</div>
     <div class="characteristic-note">
       <strong>Characteristic note:</strong> ${modeData.characteristic.description}.
-    </div>
-  </section>
+    </div>`;
 
-  <section class="content-section">
-    <h2>Diatonic 7th chords</h2>
+  const chordsBody = `
     ${renderChordRow(chords)}
-    <p class="play-over-hint">${playOverHint}</p>
-  </section>
+    <div class="play-over-hint">${playOverHint}</div>`;
 
-  <section class="content-section">
-    <h2>Fretboard</h2>
-    ${renderFretboardSection(rootNote, modeData)}
-  </section>
+  const fretboardBody = renderFretboardSection(rootNote, modeData);
 
-  <section class="content-section">
-    <h2>Sound &amp; usage</h2>
-    <div class="mood-block">
-      <div class="mood-tag">${modeData.mood.mood}</div>
-      <h3>Where to use ${rootNote} ${modeName}</h3>
-      <p>${modeData.mood.usage}</p>
-      <ul class="examples-list">
-        ${modeData.mood.examples.split(', ').map(ex => `<li>${ex}</li>`).join('\n        ')}
-      </ul>
-    </div>
-  </section>
+  const moodBody = `
+    <div class="mood-tag">${modeData.mood.mood.toUpperCase()}</div>
+    <h3>Where to use ${disp(rootNote)} ${modeName}</h3>
+    <p>${modeData.mood.usage}</p>
+    <ul class="examples-list-static">
+      ${modeData.mood.examples.split(', ').map(ex => `<li>${ex}</li>`).join('\n      ')}
+    </ul>`;
 
-  ${renderRelatedLinks(rootNote, modeName)}
+  const relatedBody = renderRelatedLinks(rootNote, modeName);
+
+  const content = `<main>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    ${pageModule(`CH·01 / ${disp(rootNote).toUpperCase()} ${modeName.toUpperCase()}`, heroBody)}
+    ${pageModule(`PARENT FAMILY · ${disp(parentRoot)} MAJ`, familyBody)}
+    ${pageModule(`SCALE · 7 NOTES · ${modeData.formula}`, scaleBody)}
+    ${pageModule('DIATONIC 7ths · CHORD PAD', chordsBody)}
+    ${pageModule('FRETBOARD · STANDARD TUNING · 15F', fretboardBody, '● LIVE')}
+    ${pageModule(`CHARACTER · ${modeData.mood.mood.toUpperCase()}`, moodBody)}
+    ${pageModule('RELATED KEYS', relatedBody)}
+  </div>
 </main>`;
 
   return htmlShell({ title, description, canonicalPath, content });
-}
-
-function renderModeSelector(currentRoot, currentMode) {
-  const rootOptions = Theory.ROOT_DISPLAY.map(r =>
-    `<option value="${r.value}"${r.value === currentRoot ? ' selected' : ''}>${r.label}</option>`
-  ).join('');
-
-  const modeOptions = Theory.MODE_NAMES.map(m =>
-    `<option value="${m}"${m === currentMode ? ' selected' : ''}>${m}</option>`
-  ).join('');
-
-  return `<div class="mode-selector" style="justify-content:flex-start;margin-top:1rem">
-  <select id="rootSelect" aria-label="Root note">${rootOptions}</select>
-  <span class="in-label">in</span>
-  <select id="modeSelect" aria-label="Mode">${modeOptions}</select>
-  <button class="btn-primary" id="goBtn">Go</button>
-</div>`;
 }
 
 function renderRelatedLinks(rootNote, modeName) {
@@ -258,24 +279,20 @@ function renderRelatedLinks(rootNote, modeName) {
   const currentIdx = allRoots.indexOf(rootNote);
   const prevRoot = allRoots[(currentIdx + 11) % 12];
   const nextRoot = allRoots[(currentIdx + 1) % 12];
-
   const modeIdx = Theory.MODE_NAMES.indexOf(modeName);
   const prevMode = Theory.MODE_NAMES[(modeIdx + 6) % 7];
   const nextMode = Theory.MODE_NAMES[(modeIdx + 1) % 7];
 
-  return `<section class="content-section">
-  <h2>Related</h2>
-  <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
-    <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(prevRoot)}/">&larr; ${prevRoot} ${modeName}</a>
-    <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(nextRoot)}/">${nextRoot} ${modeName} &rarr;</a>
-    <a class="key-chip" href="/modes/${Theory.modeSlug(prevMode)}/${Theory.noteSlug(rootNote)}/">${rootNote} ${prevMode}</a>
-    <a class="key-chip" href="/modes/${Theory.modeSlug(nextMode)}/${Theory.noteSlug(rootNote)}/">${rootNote} ${nextMode}</a>
-    <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/">All ${modeName} keys</a>
-  </div>
-</section>`;
+  return `<div class="related-links">
+  <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(prevRoot)}/">← ${disp(prevRoot)} ${modeName}</a>
+  <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(nextRoot)}/">${disp(nextRoot)} ${modeName} →</a>
+  <a class="key-chip" href="/modes/${Theory.modeSlug(prevMode)}/${Theory.noteSlug(rootNote)}/">${disp(rootNote)} ${prevMode}</a>
+  <a class="key-chip" href="/modes/${Theory.modeSlug(nextMode)}/${Theory.noteSlug(rootNote)}/">${disp(rootNote)} ${nextMode}</a>
+  <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/">All ${modeName} keys</a>
+</div>`;
 }
 
-// ── Mode overview page (per mode, all 12 keys) ─────────────────────────────
+// ── Mode overview page ────────────────────────────────────────────────────────
 
 function buildModeIndexPage(modeName) {
   const mood = Theory.MODE_MOOD[modeName];
@@ -285,107 +302,63 @@ function buildModeIndexPage(modeName) {
 
   const keyLinks = Theory.ALL_ROOTS.map(root => {
     const url = `/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(root)}/`;
-    return `<a class="key-chip" href="${url}">${root} ${modeName}</a>`;
+    return `<a class="key-chip" href="${url}">${disp(root)} ${modeName}</a>`;
   }).join('\n    ');
 
-  const content = `<main>
-  <div class="page-hero">
-    <p class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/modes/">Modes</a> &rsaquo; ${modeName}</p>
-    <h1>${modeName}</h1>
-    <p class="subtitle">${mood.mood}</p>
-  </div>
+  const heroBody = `
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="/modes/">Modes</a><span class="sep">›</span>${modeName}</div>
+    <h1 class="page-hero-title">${modeName}</h1>
+    <div class="page-hero-sub">${mood.mood}</div>`;
 
-  <section class="content-section">
-    <h2>About ${modeName}</h2>
+  const aboutBody = `
     <p>${mood.mood}. Used in ${mood.usage.toLowerCase()}.</p>
-    <p class="text-muted" style="font-size:0.9rem">Famous examples: ${mood.examples}.</p>
-    <div class="characteristic-note" style="margin-top:1rem">
+    <p style="margin-top:8px;font-size:12px;color:var(--dim)">Famous examples: ${mood.examples}.</p>
+    <div class="characteristic-note" style="margin-top:12px">
       <strong>Characteristic note:</strong> ${Theory.MODE_CHARACTERISTIC_NOTE[modeName].description}.
-    </div>
-  </section>
+    </div>`;
 
-  <section class="content-section">
-    <h2>${modeName} in all 12 keys</h2>
-    <div class="key-list">
-    ${keyLinks}
-    </div>
-  </section>
+  const keysBody = `<div class="key-list">${keyLinks}</div>`;
+
+  const content = `<main>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    ${pageModule(`CH·01 / ${modeName.toUpperCase()} MODE`, heroBody)}
+    ${pageModule(`CHARACTER · ${mood.mood.toUpperCase()}`, aboutBody)}
+    ${pageModule(`${modeName.toUpperCase()} IN ALL 12 KEYS`, keysBody)}
+  </div>
 </main>`;
 
   return htmlShell({ title, description, canonicalPath, content });
 }
 
-// ── Modes index page ──────────────────────────────────────────────────────────
+// ── Modes index ───────────────────────────────────────────────────────────────
 
 function buildModesIndexPage() {
   const modeCards = Theory.MODE_NAMES.map(name => {
     const mood = Theory.MODE_MOOD[name];
-    return `<a class="mode-card" href="/modes/${Theory.modeSlug(name)}/">
+    return `<a class="mode-overview-card" href="/modes/${Theory.modeSlug(name)}/">
   <div class="mode-name">${name}</div>
   <div class="mode-desc">${mood.mood}</div>
 </a>`;
   }).join('\n');
 
+  const heroBody = `
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span>Modes</div>
+    <h1 class="page-hero-title">The 7 Modes</h1>
+    <div class="page-hero-sub">All modes of the major scale — pick any key for full diagrams</div>`;
+
+  const gridBody = `<div class="mode-grid">${modeCards}</div>`;
+
   const content = `<main>
-  <div class="page-hero">
-    <p class="breadcrumb"><a href="/">Home</a> &rsaquo; Modes</p>
-    <h1>The 7 Guitar Modes</h1>
-    <p class="subtitle">All modes of the major scale — pick any key and see full diagrams</p>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    ${pageModule('CH·01 / ALL MODES', heroBody)}
+    ${pageModule('BROWSE ALL MODES', gridBody)}
   </div>
-  <div class="mode-grid">${modeCards}</div>
 </main>`;
 
   return htmlShell({
     title: 'Guitar Modes — All 7 Modes Explained | Guitar Mode Finder',
     description: 'All 7 modes of the major scale explained for guitar: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian. Fretboard diagrams in every key.',
     canonicalPath: '/modes/',
-    content,
-  });
-}
-
-// ── Home page ─────────────────────────────────────────────────────────────────
-
-function buildHomePage() {
-  const rootOptions = Theory.ROOT_DISPLAY.map(r =>
-    `<option value="${r.value}">${r.label}</option>`
-  ).join('');
-
-  const modeOptions = Theory.MODE_NAMES.map(m =>
-    `<option value="${m}">${m}</option>`
-  ).join('');
-
-  const modeCards = Theory.MODE_NAMES.map(name => {
-    const mood = Theory.MODE_MOOD[name];
-    return `<a class="mode-card" href="/modes/${Theory.modeSlug(name)}/">
-  <div class="mode-name">${name}</div>
-  <div class="mode-desc">${mood.mood}</div>
-</a>`;
-  }).join('\n');
-
-  const content = `<main>
-  <div class="hero">
-    <h1>Find your <em>mode</em>.<br>Play it everywhere.</h1>
-    <p>Select any mode and key — instantly see the full scale family, diatonic chords, pentatonic subset, and fretboard diagram.</p>
-    <div class="mode-selector">
-      <select id="rootSelect" aria-label="Root note">${rootOptions}</select>
-      <span class="in-label">in</span>
-      <select id="modeSelect" aria-label="Mode">${modeOptions}</select>
-      <button class="btn-primary" id="goBtn">Explore</button>
-    </div>
-    <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.5rem">Try: <a href="/modes/dorian/g-sharp/">G# Dorian</a> &middot; <a href="/modes/lydian/f/">F Lydian</a> &middot; <a href="/modes/mixolydian/a/">A Mixolydian</a></p>
-  </div>
-
-  <section class="content-section" style="margin-top:2rem">
-    <h2>Browse all modes</h2>
-    <div class="mode-grid">${modeCards}</div>
-  </section>
-
-</main>`;
-
-  return htmlShell({
-    title: 'Guitar Mode Finder — Fretboard Diagrams for All 7 Modes',
-    description: 'Find any guitar mode in any key. See the full scale family, diatonic 7th chords, pentatonic subset, and full fretboard diagrams. Free, fast, no ads.',
-    canonicalPath: '/',
     content,
   });
 }
@@ -400,26 +373,17 @@ ${urlEntries}
 </urlset>`;
 }
 
-// ── robots.txt ────────────────────────────────────────────────────────────────
-
 function buildRobotsTxt() {
-  return `User-agent: *
-Allow: /
-Sitemap: ${SITE_URL}/sitemap.xml
-`;
+  return `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 }
 
-// ── Main build ────────────────────────────────────────────────────────────────
+// ── Build ─────────────────────────────────────────────────────────────────────
 
 function build() {
   const urls = ['/'];
   let pageCount = 0;
 
   console.log('Building Guitar Mode Finder...\n');
-
-  // Home
-  writeFile(path.join(ROOT_DIR, 'index.html'), buildHomePage());
-  console.log('✓ index.html');
 
   // Modes index
   writeFile(path.join(ROOT_DIR, 'modes', 'index.html'), buildModesIndexPage());
@@ -434,27 +398,22 @@ function build() {
     console.log(`✓ modes/${modeSlug}/index.html`);
   }
 
-  // All 84 mode × key pages
+  // 84 mode × key pages
   for (const modeName of Theory.MODE_NAMES) {
     for (const rootNote of Theory.ALL_ROOTS) {
       const modeSlug = Theory.modeSlug(modeName);
       const keySlug = Theory.noteSlug(rootNote);
-      const html = buildModePage(rootNote, modeName);
-      writeFile(path.join(ROOT_DIR, 'modes', modeSlug, keySlug, 'index.html'), html);
+      writeFile(path.join(ROOT_DIR, 'modes', modeSlug, keySlug, 'index.html'), buildModePage(rootNote, modeName));
       urls.push(`/modes/${modeSlug}/${keySlug}/`);
       pageCount++;
     }
   }
   console.log(`✓ ${pageCount} mode pages`);
 
-  // Sitemap
+  // Sitemap + robots
   writeFile(path.join(ROOT_DIR, 'sitemap.xml'), buildSitemap(urls));
-  console.log('✓ sitemap.xml');
-
-  // robots.txt
   writeFile(path.join(ROOT_DIR, 'robots.txt'), buildRobotsTxt());
-  console.log('✓ robots.txt');
-
+  console.log('✓ sitemap.xml + robots.txt');
   console.log(`\nDone! ${urls.length} total pages.`);
 }
 

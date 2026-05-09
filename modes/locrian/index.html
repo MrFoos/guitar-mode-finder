@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,57 +14,81 @@
 <link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="">
-<header class="site-header">
-  <div class="inner">
-    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
-    <nav class="site-nav">
-      <a href="/modes/">Modes</a>
-      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+<body>
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+    <div class="rack-brand">
+      <div class="power-led-enclosure"><div class="power-led"></div></div>
+      <div>
+        <div class="brand-label-top">MODE FINDER</div>
+        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">FRETBOARD MODULE — Mk II</a>
+      </div>
+    </div>
+    <nav class="rack-nav">
+      <a href="/">MODES</a>
+      <a href="/modes/">KEYS</a>
+      <a href="/guides/how-to-use-modes.html">METHOD</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label active" id="labelNight">NIGHT</span>
+      </button>
     </nav>
   </div>
 </header>
 <main>
-  <div class="page-hero">
-    <p class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/modes/">Modes</a> &rsaquo; Locrian</p>
-    <h1>Locrian</h1>
-    <p class="subtitle">Unstable, tense, dissonant</p>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">CH·01 / LOCRIAN MODE</span>
   </div>
-
-  <section class="content-section">
-    <h2>About Locrian</h2>
+  <div class="page-module-body">
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="/modes/">Modes</a><span class="sep">›</span>Locrian</div>
+    <h1 class="page-hero-title">Locrian</h1>
+    <div class="page-hero-sub">Unstable, tense, dissonant</div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">CHARACTER · UNSTABLE, TENSE, DISSONANT</span>
+  </div>
+  <div class="page-module-body">
     <p>Unstable, tense, dissonant. Used in metal, jazz, used sparingly.</p>
-    <p class="text-muted" style="font-size:0.9rem">Famous examples: Half-diminished chord contexts, Metallica solos.</p>
-    <div class="characteristic-note" style="margin-top:1rem">
+    <p style="margin-top:8px;font-size:12px;color:var(--dim)">Famous examples: Half-diminished chord contexts, Metallica solos.</p>
+    <div class="characteristic-note" style="margin-top:12px">
       <strong>Characteristic note:</strong> the ♭5 (diminished fifth) makes it unstable and rarely used as a tonal center.
-    </div>
-  </section>
-
-  <section class="content-section">
-    <h2>Locrian in all 12 keys</h2>
-    <div class="key-list">
-    <a class="key-chip" href="/modes/locrian/c/">C Locrian</a>
-    <a class="key-chip" href="/modes/locrian/c-sharp/">C# Locrian</a>
+    </div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">LOCRIAN IN ALL 12 KEYS</span>
+  </div>
+  <div class="page-module-body"><div class="key-list"><a class="key-chip" href="/modes/locrian/c/">C Locrian</a>
+    <a class="key-chip" href="/modes/locrian/c-sharp/">C♯ Locrian</a>
     <a class="key-chip" href="/modes/locrian/d/">D Locrian</a>
-    <a class="key-chip" href="/modes/locrian/d-sharp/">D# Locrian</a>
+    <a class="key-chip" href="/modes/locrian/d-sharp/">D♯ Locrian</a>
     <a class="key-chip" href="/modes/locrian/e/">E Locrian</a>
     <a class="key-chip" href="/modes/locrian/f/">F Locrian</a>
-    <a class="key-chip" href="/modes/locrian/f-sharp/">F# Locrian</a>
+    <a class="key-chip" href="/modes/locrian/f-sharp/">F♯ Locrian</a>
     <a class="key-chip" href="/modes/locrian/g/">G Locrian</a>
-    <a class="key-chip" href="/modes/locrian/g-sharp/">G# Locrian</a>
+    <a class="key-chip" href="/modes/locrian/g-sharp/">G♯ Locrian</a>
     <a class="key-chip" href="/modes/locrian/a/">A Locrian</a>
-    <a class="key-chip" href="/modes/locrian/a-sharp/">A# Locrian</a>
-    <a class="key-chip" href="/modes/locrian/b/">B Locrian</a>
-    </div>
-  </section>
+    <a class="key-chip" href="/modes/locrian/a-sharp/">A♯ Locrian</a>
+    <a class="key-chip" href="/modes/locrian/b/">B Locrian</a></div></div>
+</div>
+  </div>
 </main>
-<footer class="site-footer">
-  <p>
-    <a href="/">Home</a> &middot;
-    <a href="/modes/">All Modes</a> &middot;
-    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
-  </p>
-  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+<footer class="rack-footer">
+  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
 </footer>
 <script src="/js/ui.js" defer></script>
 </body>

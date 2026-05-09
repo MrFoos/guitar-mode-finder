@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,58 +14,84 @@
 <link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="">
-<header class="site-header">
-  <div class="inner">
-    <a class="site-logo" href="/"><span class="logo-mark">&#9834;</span> Guitar Mode Finder</a>
-    <nav class="site-nav">
-      <a href="/modes/">Modes</a>
-      <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
+<body>
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+    <div class="rack-brand">
+      <div class="power-led-enclosure"><div class="power-led"></div></div>
+      <div>
+        <div class="brand-label-top">MODE FINDER</div>
+        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">FRETBOARD MODULE — Mk II</a>
+      </div>
+    </div>
+    <nav class="rack-nav">
+      <a href="/">MODES</a>
+      <a href="/modes/">KEYS</a>
+      <a href="/guides/how-to-use-modes.html">METHOD</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label active" id="labelNight">NIGHT</span>
+      </button>
     </nav>
   </div>
 </header>
 <main>
-  <div class="page-hero">
-    <p class="breadcrumb"><a href="/">Home</a> &rsaquo; Modes</p>
-    <h1>The 7 Guitar Modes</h1>
-    <p class="subtitle">All modes of the major scale — pick any key and see full diagrams</p>
+  <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">CH·01 / ALL MODES</span>
   </div>
-  <div class="mode-grid"><a class="mode-card" href="/modes/ionian/">
+  <div class="page-module-body">
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span>Modes</div>
+    <h1 class="page-hero-title">The 7 Modes</h1>
+    <div class="page-hero-sub">All modes of the major scale — pick any key for full diagrams</div></div>
+</div>
+    <div class="page-module">
+  <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+  <div class="page-module-header">
+    <span class="page-module-title">BROWSE ALL MODES</span>
+  </div>
+  <div class="page-module-body"><div class="mode-grid"><a class="mode-overview-card" href="/modes/ionian/">
   <div class="mode-name">Ionian</div>
   <div class="mode-desc">Happy, bright, resolved</div>
 </a>
-<a class="mode-card" href="/modes/dorian/">
+<a class="mode-overview-card" href="/modes/dorian/">
   <div class="mode-name">Dorian</div>
   <div class="mode-desc">Soulful, minor but with hope</div>
 </a>
-<a class="mode-card" href="/modes/phrygian/">
+<a class="mode-overview-card" href="/modes/phrygian/">
   <div class="mode-name">Phrygian</div>
   <div class="mode-desc">Dark, tense, Spanish/flamenco</div>
 </a>
-<a class="mode-card" href="/modes/lydian/">
+<a class="mode-overview-card" href="/modes/lydian/">
   <div class="mode-name">Lydian</div>
   <div class="mode-desc">Dreamy, floating, ethereal</div>
 </a>
-<a class="mode-card" href="/modes/mixolydian/">
+<a class="mode-overview-card" href="/modes/mixolydian/">
   <div class="mode-name">Mixolydian</div>
   <div class="mode-desc">Bluesy, dominant, rock</div>
 </a>
-<a class="mode-card" href="/modes/aeolian/">
+<a class="mode-overview-card" href="/modes/aeolian/">
   <div class="mode-name">Aeolian</div>
   <div class="mode-desc">Melancholic, natural minor</div>
 </a>
-<a class="mode-card" href="/modes/locrian/">
+<a class="mode-overview-card" href="/modes/locrian/">
   <div class="mode-name">Locrian</div>
   <div class="mode-desc">Unstable, tense, dissonant</div>
-</a></div>
+</a></div></div>
+</div>
+  </div>
 </main>
-<footer class="site-footer">
-  <p>
-    <a href="/">Home</a> &middot;
-    <a href="/modes/">All Modes</a> &middot;
-    <a href="/guides/how-to-use-modes.html">How to Use Modes</a>
-  </p>
-  <p style="margin-top:0.5rem">Guitar Mode Finder &mdash; Free guitar modes reference</p>
+<footer class="rack-footer">
+  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
 </footer>
 <script src="/js/ui.js" defer></script>
 </body>
