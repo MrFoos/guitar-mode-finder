@@ -120,13 +120,6 @@
     }).join('');
 
     container.innerHTML = `
-      <div class="knob-container">
-        <svg class="knob-svg" viewBox="0 0 100 100">${ticks}</svg>
-        <div class="knob-body" style="transform:rotate(${angle}deg)">
-          <div class="knob-pointer"></div>
-          <div class="knob-cap"></div>
-        </div>
-      </div>
       <div class="knob-label">${label}</div>
       <select class="knob-select">${opts}</select>`;
 
@@ -149,10 +142,9 @@
     const { root, mode } = state;
     const notes = Theory.getModeNotes(root, mode);
     const parent = Theory.getParentRoot(root, mode);
-    document.getElementById('led-degree').textContent = `DEG · ${MODE_DEGREE[mode]}`;
     document.getElementById('led-name').textContent = `${disp(root)} ${mode.toUpperCase()}`;
-    document.getElementById('led-parent').textContent =
-      `parent · ${disp(parent)} MAJ · ${notes.map(disp).join(' · ')}`;
+    document.getElementById('led-parent-key').textContent = `PARENT: ${disp(parent)} MAJOR`;
+    document.getElementById('led-parent-notes').textContent = notes.map(disp).join(' · ');
   }
 
   /* ── Fretboard SVG ───────────────────────────────────────────────────────── */
@@ -194,9 +186,10 @@
   function buildFretboardSVG(root, mode) {
     const t = currentTheme();
     const scale = Theory.getModeNotes(root, mode);
-    const noteSet = new Set(scale);
-    const W = 1400, H = 320;
-    const padL = 70, padR = 24, padT = 28, padB = 38;
+    const normalizedScale = scale.map(n => SEMITONES[Theory.noteIndex(n)]);
+    const noteSet = new Set(normalizedScale);
+    const W = 1400, H = 360;
+    const padL = 70, padR = 24, padT = 28, padB = 60;
     const frets = 15;
     const inner = W - padL - padR;
     const fretW = inner / frets;
@@ -241,19 +234,19 @@
     TUNING.forEach((s, i) => {
       const y = (padT + i * rowH).toFixed(1);
       p.push(`<line x1="${padL - 12}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${(0.7 + i * 0.28).toFixed(2)}"/>`);
-      p.push(`<text x="${padL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="${t.fbLabel}" text-anchor="middle" font-weight="600">${s}</text>`);
+      p.push(`<text x="${padL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
     });
 
     for (let f = 0; f < frets; f++) {
       const x = (padL + (f + 0.5) * fretW).toFixed(1);
-      p.push(`<text x="${x}" y="${(H - padB + 22).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="10" fill="${t.fbLabel}" text-anchor="middle">${f + 1}</text>`);
+      p.push(`<text x="${x}" y="${(H - padB + 50).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="14" fill="#ffffff" text-anchor="middle">${f + 1}</text>`);
     }
 
     TUNING.forEach((open, si) => {
       for (let f = 0; f <= frets; f++) {
         const n = noteAt(open, f);
         if (!noteSet.has(n)) continue;
-        const idx = scale.indexOf(n);
+        const idx = normalizedScale.indexOf(n);
         const isRoot = idx === 0;
         const ip = inPenta(mode, idx);
         const cx = (f === 0 ? padL - 36 : padL + (f - 0.5) * fretW).toFixed(1);
@@ -265,8 +258,8 @@
 
         if (isRoot) p.push(`<circle cx="${cx}" cy="${cy}" r="${r + 8}" fill="url(#root-glow)"/>`);
         p.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`);
-        if (isRoot) p.push(`<circle cx="${(parseFloat(cx) - 4).toFixed(1)}" cy="${(parseFloat(cy) - 5).toFixed(1)}" r="4" fill="${t.rootHi}" opacity="0.5"/>`);
-        p.push(`<text x="${cx}" y="${(parseFloat(cy) + 4.5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="${txt}" text-anchor="middle">${disp(n)}</text>`);
+        const textFill = f === 0 ? (t.isDark ? '#ffffff' : txt) : txt;
+        p.push(`<text x="${cx}" y="${(parseFloat(cy) + 5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="${f === 0 ? '14' : '13'}" font-weight="700" fill="${textFill}" text-anchor="middle">${disp(n)}</text>`);
       }
     });
 
@@ -321,16 +314,23 @@
     const chords = getDiatonicChords(root, mode);
     const romans = ['I','II','III','IV','V','VI','VII'];
 
-    document.getElementById('chord-pad').innerHTML = chords.map((c, i) => {
-      const tonic = i === 0;
-      return `<div class="chord-pad ${tonic ? 'is-tonic' : 'is-other'}">
-        <div class="chord-roman">${romans[i]}</div>
-        <div class="chord-name">${disp(c.name)}</div>
-      </div>`;
-    }).join('') + `<div class="chord-pad-aux">+ AUX</div>`;
+    const row = chords.map((c, i) =>
+      `<div class="chord-led-cell${i === 0 ? ' is-tonic' : ''}">
+        <div class="chord-led-roman">${romans[i]}</div>
+        <div class="chord-led-name">${disp(c.name)}</div>
+      </div>`
+    ).join('');
 
-    document.getElementById('vamp-hint').textContent =
-      `▸ Vamp idea — ${disp(chords[0].name)} → ${disp(chords[3].name)} → ${disp(chords[4].name)}`;
+    document.getElementById('chord-display').innerHTML = `
+      <div class="chord-led-header">DIATONIC 7ths</div>
+      <div class="chord-led-row">${row}</div>
+      <div class="chord-led-divider"></div>
+      <div class="chord-led-vamp">
+        <span class="chord-led-vamp-label">VAMP</span>
+        <span class="chord-led-vamp-chords">
+          ${disp(chords[0].name)}<span class="chord-led-sep">→</span>${disp(chords[3].name)}<span class="chord-led-sep">→</span>${disp(chords[4].name)}
+        </span>
+      </div>`;
   }
 
   /* ── Parent Family ───────────────────────────────────────────────────────── */
@@ -340,24 +340,22 @@
     const family = Theory.getModeFamily(root, mode);
     const parent = Theory.getParentRoot(root, mode);
     const romans = ['I','II','III','IV','V','VI','VII'];
-    const moods = Theory.MODE_MOOD;
 
-    document.getElementById('family-title').textContent = `PARENT FAMILY · ${disp(parent)} MAJ`;
+    document.getElementById('family-title').textContent = `PARENT FAMILY · ${disp(parent)} MAJOR`;
 
     const list = document.getElementById('family-list');
     list.innerHTML = family.map((f, i) => {
       const cls = f.isSelected ? 'is-selected' : 'is-other';
-      return `<div class="family-row ${cls}" data-root="${f.root}" data-mode="${f.name}">
-        <span class="family-roman">${romans[i]}</span>
-        <span class="family-label">${disp(f.root)} ${f.name}</span>
-        <span class="family-mood">${moods[f.name].mood}</span>
-      </div>`;
+      return `<button class="family-btn ${cls}" data-root="${f.root}" data-mode="${f.name}">
+        <span class="family-btn-roman">${romans[i]}</span>
+        <span class="family-btn-name">${disp(f.root)} ${f.name}</span>
+      </button>`;
     }).join('');
 
-    list.querySelectorAll('.family-row').forEach(row => {
-      row.addEventListener('click', () => {
-        state.root = row.dataset.root;
-        state.mode = row.dataset.mode;
+    list.querySelectorAll('.family-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.root = btn.dataset.root;
+        state.mode = btn.dataset.mode;
         renderKnobs();
         render();
       });
@@ -401,26 +399,6 @@
 
   /* ── All Modes Strip ─────────────────────────────────────────────────────── */
 
-  function renderModesStrip() {
-    const strip = document.getElementById('modes-strip');
-
-    strip.innerHTML = Theory.MODE_NAMES.map(m => {
-      const sel = m === state.mode;
-      return `<div class="mode-card ${sel ? 'is-selected' : 'is-unselected'}" data-mode="${m}">
-        <div class="mode-card-degree">${MODE_DEGREE[m]}</div>
-        <div class="mode-card-name">${m.toUpperCase()}</div>
-        <div class="mode-card-intervals">${Theory.MODE_INTERVAL_FORMULA[m]}</div>
-      </div>`;
-    }).join('');
-
-    strip.querySelectorAll('.mode-card').forEach(card => {
-      card.addEventListener('click', () => {
-        state.mode = card.dataset.mode;
-        renderKnobs();
-        render();
-      });
-    });
-  }
 
   /* ── ENGAGE animation ────────────────────────────────────────────────────── */
 
@@ -442,17 +420,15 @@
   function render() {
     renderLED();
     renderFretboard();
-    renderScaleStrip();
     renderChordPad();
     renderParentFamily();
     renderCharacter();
-    renderModesStrip();
   }
 
   /* ── Knobs ───────────────────────────────────────────────────────────────── */
 
   const ROOT_OPTIONS = Theory.ROOT_DISPLAY;
-  const MODE_OPTIONS = Theory.MODE_NAMES.map(m => ({ value: m, label: m.slice(0,4).toUpperCase() }));
+  const MODE_OPTIONS = Theory.MODE_NAMES.map(m => ({ value: m, label: m.toUpperCase() }));
 
   function renderKnobs() {
     const rootEl = document.getElementById('root-knob');
@@ -498,14 +474,7 @@
       return;
     }
 
-    renderVU(document.getElementById('vu-meter'));
     renderKnobs();
-
-    const engageBtn = document.getElementById('engageBtn');
-    engageBtn.addEventListener('click', () => {
-      render();
-      fireEngageAnimation();
-    });
 
     initialized = true;
     render();

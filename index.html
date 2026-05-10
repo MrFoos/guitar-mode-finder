@@ -12,6 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="/mascot.png" type="image/jpeg">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -25,19 +26,15 @@
     <div class="screw screw-br"></div>
 
     <div class="rack-brand">
-      <div class="power-led-enclosure">
-        <div class="power-led"></div>
-      </div>
+      <img src="/mascot.png" alt="Guitar Mode Finder" class="brand-logo">
       <div>
-        <div class="brand-label-top">MODE FINDER</div>
-        <div class="brand-label-main">FRETBOARD MODULE — Mk II</div>
+        <h1 class="brand-label-main">Guitar Mode Finder</h1>
       </div>
     </div>
 
     <nav class="rack-nav">
       <a href="/" class="active">MODES</a>
-      <a href="/modes/">KEYS</a>
-      <a href="/guides/how-to-use-modes.html">METHOD</a>
+
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
         <span class="toggle-label" id="labelDay">DAY</span>
         <span class="toggle-track"><span class="toggle-ball"></span></span>
@@ -56,22 +53,20 @@
     <div class="screw screw-bl"></div><div class="screw screw-br"></div>
     <div class="rack-module-header">
       <span class="rack-module-title">CH·01 / SCALE LOOKUP</span>
-      <span class="rack-module-status">● ARMED</span>
     </div>
     <div class="rack-module-body">
       <div class="lookup-grid">
         <div class="lookup-controls">
           <div class="knob-wrap" id="root-knob"></div>
           <div class="knob-wrap" id="mode-knob"></div>
-          <button class="engage-btn" id="engageBtn">ENGAGE</button>
         </div>
         <div class="lookup-readout">
           <div class="led-display" id="led-display">
-            <div class="led-header-row"><span>NOW PLAYING</span><span id="led-degree">DEG · I</span></div>
+            <div class="led-header-row">NOW PLAYING</div>
             <div class="led-mode-name" id="led-name">C IONIAN</div>
-            <div class="led-parent-row" id="led-parent">parent · C MAJ · C D E F G A B</div>
+            <div class="led-parent-key" id="led-parent-key">PARENT: C MAJOR</div>
+            <div class="led-parent-notes" id="led-parent-notes">C · D · E · F · G · A · B</div>
           </div>
-          <div class="vu-meter" id="vu-meter"></div>
         </div>
       </div>
     </div>
@@ -83,7 +78,6 @@
     <div class="screw screw-bl"></div><div class="screw screw-br"></div>
     <div class="rack-module-header">
       <span class="rack-module-title">FRETBOARD · STANDARD TUNING · 15F</span>
-      <span class="rack-module-status">● LIVE</span>
     </div>
     <div class="rack-module-body">
       <div class="fretboard-svg-wrap" id="fretboard-wrap"></div>
@@ -91,47 +85,7 @@
     </div>
   </div>
 
-  <!-- CH·03 SCALE STRIP -->
-  <div class="rack-module" id="mod-scale">
-    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
-    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
-    <div class="rack-module-header">
-      <span class="rack-module-title" id="scale-title">SCALE · 7 NOTES · INTERVAL FORMULA</span>
-    </div>
-    <div class="rack-module-body">
-      <div class="scale-strip" id="scale-strip"></div>
-    </div>
-  </div>
-
-  <!-- CH·04 two-column row -->
-  <div class="rack-row">
-    <!-- CH·04a CHORD PAD -->
-    <div class="rack-module" id="mod-chords">
-      <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
-      <div class="screw screw-bl"></div><div class="screw screw-br"></div>
-      <div class="rack-module-header">
-        <span class="rack-module-title">DIATONIC 7ths · CHORD PAD</span>
-      </div>
-      <div class="rack-module-body">
-        <div class="chord-pad-grid" id="chord-pad"></div>
-        <div class="vamp-hint" id="vamp-hint"></div>
-      </div>
-    </div>
-
-    <!-- CH·04b PARENT FAMILY -->
-    <div class="rack-module" id="mod-family">
-      <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
-      <div class="screw screw-bl"></div><div class="screw screw-br"></div>
-      <div class="rack-module-header">
-        <span class="rack-module-title" id="family-title">PARENT FAMILY · C MAJ</span>
-      </div>
-      <div class="rack-module-body">
-        <div class="family-list" id="family-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CH·05 CHARACTER -->
+  <!-- CH·03 CHARACTER -->
   <div class="rack-module" id="mod-character">
     <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
     <div class="screw screw-bl"></div><div class="screw screw-br"></div>
@@ -143,17 +97,30 @@
     </div>
   </div>
 
-  <!-- CH·06 ALL MODES QUICK SWITCH -->
-  <div class="rack-module" id="mod-modes">
+  <!-- CH·04 PARENT FAMILY -->
+  <div class="rack-module" id="mod-family">
     <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
     <div class="screw screw-bl"></div><div class="screw screw-br"></div>
     <div class="rack-module-header">
-      <span class="rack-module-title">ALL MODES · QUICK SWITCH</span>
+      <span class="rack-module-title" id="family-title">PARENT FAMILY · C MAJ</span>
     </div>
     <div class="rack-module-body">
-      <div class="modes-strip" id="modes-strip"></div>
+      <div class="family-list" id="family-list"></div>
     </div>
   </div>
+
+  <!-- CH·05 CHORD PAD -->
+  <div class="rack-module" id="mod-chords">
+    <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div><div class="screw screw-br"></div>
+    <div class="rack-module-header">
+      <span class="rack-module-title">DIATONIC 7ths · CHORD DISPLAY</span>
+    </div>
+    <div class="rack-module-body">
+      <div class="led-display chord-led" id="chord-display"></div>
+    </div>
+  </div>
+
 
 </main>
 
