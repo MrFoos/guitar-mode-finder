@@ -103,7 +103,7 @@ function siteHeader() {
 
 function siteFooter() {
   return `<footer class="rack-footer">
-  GUITAR MODE FINDER · MODULE Mk II · HAND-WIRED · MMXXVI
+  © 2026 Guitar Mode Finder
 </footer>`;
 }
 

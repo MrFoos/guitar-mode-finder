@@ -8,7 +8,7 @@
 
   const DARK = {
     isDark: true,
-    fbTop: '#0d0d0f', fbBot: '#1a1a20',
+    fbTop: '#110800', fbBot: '#1a0d00',
     nut: '#c8b888', fretEdge: '#8a8070', fretShine: '#d4c8b0',
     inlay: '#e8d8a8', inlayEdge: '#6a5530',
     string: '#c8b888', fbLabel: '#86848c',
@@ -20,14 +20,14 @@
 
   const LIGHT = {
     isDark: false,
-    fbTop: '#3a1f0e', fbBot: '#2a1408',
+    fbTop: '#110800', fbBot: '#1a0d00',
     nut: '#f0e0c0', fretEdge: '#c8c0b0', fretShine: '#fff5d8',
     inlay: '#f4e8c8', inlayEdge: '#a08560',
     string: '#e8d4a0', fbLabel: '#d4b888',
-    rootFill: '#a83232', rootStroke: '#6a1f1f', rootText: '#fffbe8',
-    rootGlow: '#ff6b3a', rootHi: '#ffd0a0',
-    pentaFill: '#c47f1a', pentaStroke: '#7a4f10', pentaText: '#1a0d00',
-    scaleFill: '#f4ecd6', scaleStroke: '#a08560', scaleText: '#2a1f15',
+    rootFill: '#cc2020', rootStroke: '#881010', rootText: '#ffffff',
+    rootGlow: '#ff4020', rootHi: '#ffd0a0',
+    pentaFill: '#e8a818', pentaStroke: '#8a5c08', pentaText: '#1a0800',
+    scaleFill: '#f0e8d0', scaleStroke: '#5a4830', scaleText: '#1a1208',
   };
 
   let themeKey = 'night';
@@ -72,14 +72,34 @@
     Mixolydian: 6, Aeolian: 5, Locrian: 4,
   };
 
-  const MODE_EXAMPLES = {
-    Ionian:     ['Let It Be — Beatles', 'Happy Birthday', 'Most pop songs'],
-    Dorian:     ['So What — Miles Davis', 'Oye Como Va — Santana', 'Scarborough Fair'],
-    Phrygian:   ['Wherever I May Roam — Metallica', 'Spanish Phrygian vamps', 'White Zombie riffs'],
-    Lydian:     ['Flying — Joe Satriani', 'The Simpsons theme', 'Lydian film scores'],
-    Mixolydian: ["Sweet Child O' Mine — Guns N' Roses", 'Norwegian Wood — Beatles', 'Gimme Shelter — Stones'],
-    Aeolian:    ['Stairway to Heaven — Zeppelin', 'Hotel California — Eagles', 'Sultans of Swing — Dire Straits'],
-    Locrian:    ['Army of Me — Björk', 'Half-diminished chord vamps', 'Metallica solos'],
+  const MODE_USE_OVER = {
+    Ionian:     'maj7 chords',
+    Dorian:     'm7 chords',
+    Phrygian:   'm7 chords',
+    Lydian:     'maj7 chords',
+    Mixolydian: 'dom7 chords',
+    Aeolian:    'm7 chords',
+    Locrian:    'm7♭5 chords',
+  };
+
+  const MODE_COMPARE = {
+    Ionian:     'Like Mixolydian but with a major 7th instead of ♭7',
+    Dorian:     'Like Aeolian but with a raised 6th',
+    Phrygian:   'Like Aeolian but with a ♭2',
+    Lydian:     'Like Ionian but with a ♯4',
+    Mixolydian: 'Like Ionian but with a ♭7',
+    Aeolian:    'Like Dorian but with a ♭6',
+    Locrian:    'Like Phrygian but with a ♭5',
+  };
+
+  const MODE_TIP = {
+    Ionian:     'Emphasise the maj7 over the I chord — it\'s the brightest colour tone',
+    Dorian:     'Linger on the 6th — that\'s what separates Dorian from natural minor',
+    Phrygian:   'The ♭II → I cadence is the defining Phrygian move',
+    Lydian:     'Let the ♯4 resolve up to 5 to bring out the floating Lydian feel',
+    Mixolydian: 'Target the ♭7 over the I chord — it\'s the signature Mixolydian colour',
+    Aeolian:    'i → ♭VI → ♭VII captures the Aeolian mood perfectly',
+    Locrian:    'Works best as colour over m7♭5 chords, not as a tonal centre',
   };
 
   const MODE_USES = {
@@ -170,9 +190,13 @@
   const SEMITONES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   const TUNING = ['E', 'B', 'G', 'D', 'A', 'E'];
   const PENTA_IDX = {
-    Ionian: [0,1,2,4,5], Dorian: [0,1,3,4,6], Phrygian: [0,2,3,5,6],
-    Lydian: [0,2,3,4,6], Mixolydian: [0,1,3,4,5],
-    Aeolian: [0,2,3,4,6], Locrian: [0,2,3,4,6],
+    Ionian:     [0,1,2,4,5],
+    Dorian:     [0,1,3,4,6],
+    Phrygian:   [0,2,3,4,6],
+    Lydian:     [0,1,2,4,5],
+    Mixolydian: [0,1,2,4,5],
+    Aeolian:    [0,2,3,4,6],
+    Locrian:    [0,2,3,4,6],
   };
 
   function noteAt(open, fret) {
@@ -188,6 +212,8 @@
     const scale = Theory.getModeNotes(root, mode);
     const normalizedScale = scale.map(n => SEMITONES[Theory.noteIndex(n)]);
     const noteSet = new Set(normalizedScale);
+    const displayNote = {};
+    normalizedScale.forEach((norm, i) => { displayNote[norm] = scale[i]; });
     const W = 1400, H = 360;
     const padL = 70, padR = 24, padT = 28, padB = 60;
     const frets = 15;
@@ -259,7 +285,8 @@
         if (isRoot) p.push(`<circle cx="${cx}" cy="${cy}" r="${r + 8}" fill="url(#root-glow)"/>`);
         p.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`);
         const textFill = f === 0 ? (t.isDark ? '#ffffff' : txt) : txt;
-        p.push(`<text x="${cx}" y="${(parseFloat(cy) + 5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="${f === 0 ? '14' : '13'}" font-weight="700" fill="${textFill}" text-anchor="middle">${disp(n)}</text>`);
+        const label = displayNote[n] || n;
+        p.push(`<text x="${cx}" y="${(parseFloat(cy) + 5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="${f === 0 ? '14' : '13'}" font-weight="700" fill="${textFill}" text-anchor="middle">${disp(label)}</text>`);
       }
     });
 
@@ -309,6 +336,16 @@
 
   /* ── Chord Pad ───────────────────────────────────────────────────────────── */
 
+  const VAMP_DEGREES = {
+    Ionian:     [0, 3, 4],  // I → IV → V
+    Dorian:     [0, 3],     // i → IV
+    Phrygian:   [0, 1],     // i → ♭II
+    Lydian:     [0, 1],     // I → II
+    Mixolydian: [0, 6],     // I → ♭VII
+    Aeolian:    [0, 5, 6],  // i → ♭VI → ♭VII
+    Locrian:    [0, 1, 2],  // i → ♭II → ♭III
+  };
+
   function renderChordPad() {
     const { root, mode } = state;
     const chords = getDiatonicChords(root, mode);
@@ -321,15 +358,16 @@
       </div>`
     ).join('');
 
+    const vampChords = VAMP_DEGREES[mode].map(i => disp(chords[i].name));
+    const vampStr = vampChords.join('<span class="chord-led-sep">→</span>');
+
     document.getElementById('chord-display').innerHTML = `
       <div class="chord-led-header">DIATONIC 7ths</div>
       <div class="chord-led-row">${row}</div>
       <div class="chord-led-divider"></div>
       <div class="chord-led-vamp">
         <span class="chord-led-vamp-label">VAMP</span>
-        <span class="chord-led-vamp-chords">
-          ${disp(chords[0].name)}<span class="chord-led-sep">→</span>${disp(chords[3].name)}<span class="chord-led-sep">→</span>${disp(chords[4].name)}
-        </span>
+        <span class="chord-led-vamp-chords">${vampStr}</span>
       </div>`;
   }
 
@@ -374,26 +412,25 @@
       `CHARACTER · ${moodData.mood.toUpperCase()}`;
 
     document.getElementById('character-grid').innerHTML = `
-      <div>
-        <h3 class="character-heading">
-          <span class="mode-accent">${disp(root)} ${mode}</span> sounds like…
-        </h3>
-        <p class="character-desc">
-          ${MODE_USES[mode]}. The interval that gives this mode its character is its
-          <span class="char-interval">${intervals[charIdx]}</span>
-          — listen for it as the colour-tone over the I chord.
-        </p>
+      <div class="led-display char-sounds-led">
+        <div class="led-header-row"><span class="char-mode-accent">${disp(root)} ${mode.toUpperCase()}</span> SOUNDS LIKE</div>
+        <div class="char-genres">${MODE_USES[mode]}</div>
+        <div class="char-interval-row">Characteristic: <span class="char-interval">${intervals[charIdx]}</span></div>
       </div>
-      <div>
-        <div class="heard-in-label">HEARD IN</div>
-        <ul class="examples-list">
-          ${MODE_EXAMPLES[mode].map((ex, i) =>
-            `<li class="example-item">
-              <span class="example-num">${String(i+1).padStart(2,'0')}</span>
-              <span class="example-title">${ex}</span>
-            </li>`
-          ).join('')}
-        </ul>
+      <div class="led-display char-notes-led">
+        <div class="led-header-row">HOW TO USE</div>
+        <div class="char-note-row">
+          <span class="char-note-tag">USE OVER</span>
+          <span class="char-note-text">${MODE_USE_OVER[mode]}</span>
+        </div>
+        <div class="char-note-row">
+          <span class="char-note-tag">COMPARE</span>
+          <span class="char-note-text">${MODE_COMPARE[mode]}</span>
+        </div>
+        <div class="char-note-row">
+          <span class="char-note-tag">TIP</span>
+          <span class="char-note-text">${MODE_TIP[mode]}</span>
+        </div>
       </div>`;
   }
 
