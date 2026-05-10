@@ -85,14 +85,12 @@ function siteHeader() {
     <div class="rack-brand">
       <div class="power-led-enclosure"><div class="power-led"></div></div>
       <div>
-        <div class="brand-label-top">MODE FINDER</div>
-        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">FRETBOARD MODULE — Mk II</a>
+        <a class="brand-label-main" href="/" style="text-decoration:none;color:inherit">Guitar Mode Finder</a>
       </div>
     </div>
     <nav class="rack-nav">
       <a href="/">MODES</a>
       <a href="/modes/">KEYS</a>
-      <a href="/guides/how-to-use-modes.html">METHOD</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
         <span class="toggle-label" id="labelDay">DAY</span>
         <span class="toggle-track"><span class="toggle-ball"></span></span>
