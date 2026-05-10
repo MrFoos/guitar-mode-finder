@@ -77,9 +77,17 @@
     <div class="screw screw-tl"></div><div class="screw screw-tr"></div>
     <div class="screw screw-bl"></div><div class="screw screw-br"></div>
     <div class="rack-module-header">
-      <span class="rack-module-title">FRETBOARD · STANDARD TUNING · 15F</span>
+      <span class="rack-module-title">FRETBOARD · STANDARD TUNING</span>
+      <button id="caged-toggle" class="caged-toggle">CAGED</button>
     </div>
     <div class="rack-module-body">
+      <div id="caged-shape-nav" class="caged-shape-nav" style="display:none">
+        <button class="caged-shape-btn active" data-shape="C">C</button>
+        <button class="caged-shape-btn" data-shape="A">A</button>
+        <button class="caged-shape-btn" data-shape="G">G</button>
+        <button class="caged-shape-btn" data-shape="E">E</button>
+        <button class="caged-shape-btn" data-shape="D">D</button>
+      </div>
       <div class="fretboard-svg-wrap" id="fretboard-wrap"></div>
       <div class="fretboard-legend" id="fretboard-legend"></div>
     </div>
@@ -129,6 +137,7 @@
 </footer>
 
 <script src="/js/theory.js"></script>
+<script src="/js/caged.js"></script>
 <script src="/js/ui.js"></script>
 </body>
 </html>

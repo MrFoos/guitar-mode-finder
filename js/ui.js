@@ -57,7 +57,7 @@
 
   /* ── State ───────────────────────────────────────────────────────────────── */
 
-  let state = { root: 'G#', mode: 'Dorian' };
+  let state = { root: 'C', mode: 'Ionian', cagedMode: false, cagedShape: 'C' };
   let initialized = false;
 
   /* ── Mode metadata ───────────────────────────────────────────────────────── */
@@ -294,9 +294,176 @@
     return p.join('');
   }
 
+  // Per-shape, per-mode window offsets (relative to baseFret) and fret counts.
+  // Modes: Ionian Dorian Phrygian Lydian Mixolydian Aeolian Locrian
+  const CAGED_MODES = ['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian'];
+  const CAGED_WIN = {
+    //       Io   Do   Ph   Ly   Mi   Ae   Lo
+    A: { off: [ 0,   0,   1,   0,   0,   1,   1 ],
+        fret: [ 5,   5,   5,   4,   5,   4,   5 ] },
+    G: { off: [-1,   0,   0,   2,   0,   0,   0 ],
+        fret: [ 5,   4,   5,   4,   4,   5,   5 ] },
+    E: { off: [-1,  -1,   0,  -1,  -3,  -1,   0 ],
+        fret: [ 4,   5,   4,   4,   4,   5,   4 ] },
+    D: { off: [-1,   0,  -1,  -1,  -1,   0,   0 ],
+        fret: [ 5,   4,   5,   5,   5,   4,   5 ] },
+  };
+
+  function buildCAGEDShapeSVG(shape, root, mode) {
+    const t = currentTheme();
+    const scale = Theory.getModeNotes(root, mode);
+    const normalizedScale = scale.map(n => SEMITONES[Theory.noteIndex(n)]);
+    const noteSet = new Set(normalizedScale);
+    const displayNote = {};
+    normalizedScale.forEach((norm, i) => { displayNote[norm] = scale[i]; });
+
+    const baseFret = CAGED.getShapeFret(shape, root);
+    const modeIdx = CAGED_MODES.indexOf(mode);
+    let windowStart, frets, showOpen;
+    if (shape === 'C') {
+      if (baseFret === 1) {
+        windowStart = 1; showOpen = true; frets = 4;
+      } else {
+        const prevHasNotes = TUNING.some(open => noteSet.has(noteAt(open, baseFret - 1)));
+        windowStart = prevHasNotes ? baseFret - 1 : baseFret;
+        frets = 4; showOpen = false;
+      }
+    } else {
+      const win = CAGED_WIN[shape];
+      windowStart = baseFret + (win.off[modeIdx] ?? win.off[0]);
+      frets = win.fret[modeIdx] ?? win.fret[0];
+      showOpen = false;
+      if (windowStart < 1) {
+        frets = frets + windowStart - 1;
+        windowStart = 1;
+      }
+    }
+    const showNut = windowStart === 1;
+
+    const H = 360;
+    const padL = showOpen ? 120 : 70;
+    const padR = 24, padT = 28, padB = 60;
+    const fretW = 160;
+    const W = padL + frets * fretW + padR;
+    const rowH = (H - padT - padB) / 5;
+    const openX = padL - 52;
+
+    const p = [];
+    p.push(`<svg viewBox="0 0 ${W} ${H}" style="display:block;margin:0 auto;max-width:${W}px;width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">`);
+    p.push(`<defs>
+    <linearGradient id="fb-grad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="${t.fbTop}"/>
+      <stop offset="1" stop-color="${t.fbBot}"/>
+    </linearGradient>
+    <radialGradient id="root-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="${t.rootGlow}" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="${t.rootGlow}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>`);
+
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="url(#fb-grad)" rx="4"/>`);
+
+    if (showOpen) {
+      p.push(`<rect x="${padL - 8}" y="${padT - 6}" width="10" height="${H - padT - padB + 12}" fill="${t.nut}" rx="2"/>`);
+    }
+
+    // Fret lines
+    for (let f = 0; f <= frets; f++) {
+      const x = padL + f * fretW;
+      if (!showOpen || f > 0) {
+        p.push(`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${padT - 4}" y2="${H - padB + 4}" stroke="${t.fretEdge}" stroke-width="3"/>`);
+        p.push(`<line x1="${(x - 0.6).toFixed(1)}" x2="${(x - 0.6).toFixed(1)}" y1="${padT - 4}" y2="${H - padB + 4}" stroke="${t.fretShine}" stroke-width="1"/>`);
+      }
+    }
+
+    // Inlays
+    const inlayFrets = [3, 5, 7, 9, 15, 17];
+    const dblFrets = [12, 24];
+    inlayFrets.forEach(af => {
+      const off = af - windowStart;
+      if (off >= 0 && off < frets) {
+        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        const cy = (padT + 2.5 * rowH).toFixed(1);
+        p.push(`<circle cx="${cx}" cy="${cy}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
+      }
+    });
+    dblFrets.forEach(af => {
+      const off = af - windowStart;
+      if (off >= 0 && off < frets) {
+        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        p.push(`<circle cx="${cx}" cy="${(padT + 1.5 * rowH).toFixed(1)}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
+        p.push(`<circle cx="${cx}" cy="${(padT + 3.5 * rowH).toFixed(1)}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
+      }
+    });
+
+    // Strings + labels
+    TUNING.forEach((s, i) => {
+      const y = (padT + i * rowH).toFixed(1);
+      const strStart = showOpen ? openX - 18 : padL - 12;
+      p.push(`<line x1="${strStart}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${(0.7 + i * 0.28).toFixed(2)}"/>`);
+      const labelX = showOpen ? openX - 34 : padL - 26;
+      p.push(`<text x="${labelX}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
+    });
+
+    // Fret numbers (absolute)
+    for (let f = 0; f < frets; f++) {
+      const x = (padL + (f + 0.5) * fretW).toFixed(1);
+      p.push(`<text x="${x}" y="${(H - padB + 50).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="14" fill="#ffffff" text-anchor="middle">${windowStart + f}</text>`);
+    }
+
+    function drawDot(cx, cy, n, idx) {
+      const isRoot = idx === 0;
+      const ip = inPenta(mode, idx);
+      const r = 16;
+      const fill   = isRoot ? t.rootFill   : ip ? t.pentaFill   : t.scaleFill;
+      const stroke = isRoot ? t.rootStroke : ip ? t.pentaStroke : t.scaleStroke;
+      const txt    = isRoot ? t.rootText   : ip ? t.pentaText   : t.scaleText;
+      const label  = displayNote[n] || n;
+      if (isRoot) p.push(`<circle cx="${cx}" cy="${cy}" r="${r + 8}" fill="url(#root-glow)"/>`);
+      p.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`);
+      p.push(`<text x="${cx}" y="${(parseFloat(cy) + 5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="${txt}" text-anchor="middle">${disp(label)}</text>`);
+    }
+
+    // Open string dots
+    if (showOpen) {
+      TUNING.forEach((open, si) => {
+        const n = noteAt(open, 0);
+        if (!noteSet.has(n)) return;
+        const idx = normalizedScale.indexOf(n);
+        drawDot(openX.toFixed(1), (padT + si * rowH).toFixed(1), n, idx);
+      });
+    }
+
+    // Fretted note dots
+    TUNING.forEach((open, si) => {
+      for (let off = 0; off < frets; off++) {
+        const n = noteAt(open, windowStart + off);
+        if (!noteSet.has(n)) continue;
+        const idx = normalizedScale.indexOf(n);
+        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        const cy = (padT + si * rowH).toFixed(1);
+        drawDot(cx, cy, n, idx);
+      }
+    });
+
+    p.push('</svg>');
+    return p.join('');
+  }
+
   function renderFretboard() {
     const t = currentTheme();
-    document.getElementById('fretboard-wrap').innerHTML = buildFretboardSVG(state.root, state.mode);
+    const svg = state.cagedMode
+      ? buildCAGEDShapeSVG(state.cagedShape, state.root, state.mode)
+      : buildFretboardSVG(state.root, state.mode);
+    document.getElementById('fretboard-wrap').innerHTML = svg;
+
+    const shapeNav = document.getElementById('caged-shape-nav');
+    if (shapeNav) {
+      shapeNav.style.display = state.cagedMode ? 'flex' : 'none';
+      shapeNav.querySelectorAll('.caged-shape-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.shape === state.cagedShape);
+      });
+    }
 
     const legend = document.getElementById('fretboard-legend');
     legend.innerHTML = [
@@ -512,6 +679,23 @@
     }
 
     renderKnobs();
+
+    const cagedToggle = document.getElementById('caged-toggle');
+    if (cagedToggle) {
+      cagedToggle.addEventListener('click', () => {
+        state.cagedMode = !state.cagedMode;
+        state.cagedShape = 'C';
+        cagedToggle.classList.toggle('active', state.cagedMode);
+        renderFretboard();
+      });
+    }
+
+    document.querySelectorAll('.caged-shape-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.cagedShape = btn.dataset.shape;
+        renderFretboard();
+      });
+    });
 
     initialized = true;
     render();

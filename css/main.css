@@ -157,9 +157,9 @@ a:hover { text-decoration: underline; }
 .brand-label-main {
   font-size: 40px;
   font-weight: 800;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   color: var(--text);
-  font-family: var(--sans);
+  font-family: var(--mono);
   margin: 0;
 }
 
@@ -332,6 +332,68 @@ a:hover { text-decoration: underline; }
   letter-spacing: 0.25em;
   color: var(--text);
   font-weight: 700;
+}
+
+.caged-toggle {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--dim);
+  border: 1px solid var(--groove);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.caged-toggle:hover {
+  color: var(--led);
+  border-color: var(--led);
+}
+
+.caged-toggle.active {
+  background: var(--bg-deep);
+  color: var(--led);
+  border-color: var(--groove);
+  box-shadow: inset 0 0 6px rgba(255,170,59,0.2);
+  text-shadow: 0 0 4px var(--led);
+}
+
+.caged-shape-nav {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px 0 2px;
+}
+
+.caged-shape-btn {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  width: 42px;
+  height: 42px;
+  background: transparent;
+  color: var(--dim);
+  border: 1px solid var(--groove);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.caged-shape-btn:hover {
+  color: var(--led);
+  border-color: var(--led);
+}
+
+.caged-shape-btn.active {
+  background: var(--bg-deep);
+  color: var(--led);
+  border-color: var(--groove);
+  box-shadow: inset 0 0 6px rgba(255,170,59,0.2);
+  text-shadow: 0 0 4px var(--led);
 }
 
 .rack-module-status {
@@ -876,7 +938,7 @@ a:hover { text-decoration: underline; }
 
 .char-sounds-led,
 .char-notes-led {
-  margin-bottom: 0;
+  margin-bottom: 12px;
   justify-content: center;
 }
 
@@ -920,6 +982,10 @@ a:hover { text-decoration: underline; }
   font-weight: 700;
   letter-spacing: 0.08em;
   margin-bottom: 6px;
+}
+
+.char-notes-led .led-header-row {
+  text-align: center !important;
 }
 
 .char-note-row {
