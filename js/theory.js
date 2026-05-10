@@ -16,7 +16,8 @@
     'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
   };
   const ENHARMONIC_SHARP = {
-    'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#'
+    'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
+    'Cb': 'B',  'Fb': 'E',  'E#': 'F',  'B#': 'C',
   };
 
   // Keys that conventionally use flats
