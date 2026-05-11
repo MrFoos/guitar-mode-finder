@@ -401,8 +401,9 @@
       const y = (padT + i * rowH).toFixed(1);
       const strStart = showOpen ? openX - 18 : padL - 12;
       p.push(`<line x1="${strStart}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${(0.7 + i * 0.28).toFixed(2)}"/>`);
-      const labelX = showOpen ? openX - 34 : padL - 26;
-      p.push(`<text x="${labelX}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
+      if (!showOpen) {
+        p.push(`<text x="${padL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
+      }
     });
 
     // Fret numbers (absolute)
@@ -546,14 +547,22 @@
     const parent = Theory.getParentRoot(root, mode);
     const romans = ['I','II','III','IV','V','VI','VII'];
 
-    document.getElementById('family-title').textContent = `PARENT FAMILY · ${disp(parent)} MAJOR`;
+    document.getElementById('family-title').textContent = 'PARENT FAMILY';
+
+    document.getElementById('family-led').innerHTML = `
+      <div class="family-led-parent">${disp(parent)} MAJOR</div>
+      <div class="family-led-modes">
+        ${family.map(f => {
+          const cls = f.isSelected ? 'is-selected' : '';
+          return `<span class="family-led-mode ${cls}">${disp(f.root)} ${f.name.toUpperCase()}</span>`;
+        }).join('')}
+      </div>`;
 
     const list = document.getElementById('family-list');
     list.innerHTML = family.map((f, i) => {
       const cls = f.isSelected ? 'is-selected' : 'is-other';
       return `<button class="family-btn ${cls}" data-root="${f.root}" data-mode="${f.name}">
         <span class="family-btn-roman">${romans[i]}</span>
-        <span class="family-btn-name">${disp(f.root)} ${f.name}</span>
       </button>`;
     }).join('');
 
@@ -575,12 +584,12 @@
     const intervals = Theory.MODE_INTERVAL_FORMULA[mode].split(' ');
     const charIdx = CHAR_INTERVAL_IDX[mode];
 
-    document.getElementById('char-title').textContent =
-      `CHARACTER · ${moodData.mood.toUpperCase()}`;
+    document.getElementById('char-title').textContent = 'CHARACTER';
 
     document.getElementById('character-grid').innerHTML = `
       <div class="led-display char-sounds-led">
         <div class="led-header-row"><span class="char-mode-accent">${disp(root)} ${mode.toUpperCase()}</span> SOUNDS LIKE</div>
+        <div class="char-mood">${moodData.mood}</div>
         <div class="char-genres">${MODE_USES[mode]}</div>
         <div class="char-interval-row">Characteristic: <span class="char-interval">${intervals[charIdx]}</span></div>
       </div>
