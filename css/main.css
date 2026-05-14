@@ -332,67 +332,79 @@ a:hover { text-decoration: underline; }
   letter-spacing: 0.25em;
   color: var(--text);
   font-weight: 700;
+  margin-left: 8px;
 }
 
 .caged-toggle {
   font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
   letter-spacing: 0.15em;
-  padding: 5px 12px;
-  background: transparent;
-  color: var(--dim);
-  border: 1px solid var(--dim);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  padding: 10px 8px;
+  width: calc((100% - 60px) / 7);
+  flex-shrink: 0;
+  margin-right: 20px;
+  outline: none;
 }
 
-.caged-toggle:hover {
+.caged-toggle.is-selected {
   color: var(--led);
-  border-color: var(--led);
-}
-
-.caged-toggle.active {
-  background: var(--bg-deep);
-  color: var(--led);
-  border-color: var(--groove);
-  box-shadow: inset 0 0 6px rgba(255,170,59,0.2);
   text-shadow: 0 0 4px var(--led);
 }
 
 .caged-shape-nav {
   display: flex;
   gap: 8px;
-  justify-content: center;
-  padding: 10px 0 10px;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0 0 16px;
 }
 
 .caged-shape-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--mono);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  width: 42px;
-  height: 42px;
-  background: transparent;
+  letter-spacing: 0.1em;
+  width: 56px;
   color: var(--dim);
   border: 1px solid var(--groove);
   border-radius: 3px;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  outline: none;
+  background: radial-gradient(circle at 50% 20%, #363640, #1c1c20);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 3px 0 rgba(0,0,0,0.5),
+    0 5px 8px rgba(0,0,0,0.25);
+  transform: translateY(0);
+  transition: background 0.1s, border-color 0.1s, box-shadow 0.1s, transform 0.1s;
 }
 
-.caged-shape-btn:hover {
-  color: var(--led);
-  border-color: var(--led);
+[data-theme="day"] .caged-shape-btn {
+  background: radial-gradient(circle at 50% 20%, #faf4e2, #c8c0a8);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    0 3px 0 rgba(0,0,0,0.22),
+    0 5px 8px rgba(0,0,0,0.12);
 }
+
+.caged-shape-btn:hover:not(:disabled) {
+  background: radial-gradient(circle at 50% 20%, #42424e, #26262e);
+  border-color: var(--dim);
+}
+
 
 .caged-shape-btn.active {
-  background: var(--bg-deep);
-  color: var(--led);
+  background: radial-gradient(circle at 50% 80%, #3e3e46, #2c2c34);
   border-color: var(--groove);
-  box-shadow: inset 0 0 6px rgba(255,170,59,0.2);
+  box-shadow:
+    inset 0 3px 5px rgba(0,0,0,0.55),
+    inset 0 1px 2px rgba(0,0,0,0.4),
+    0 1px 0 rgba(255,255,255,0.04);
+  transform: translateY(2px);
+  color: var(--led);
   text-shadow: 0 0 4px var(--led);
 }
 
@@ -905,6 +917,7 @@ a:hover { text-decoration: underline; }
   border-radius: 3px;
   border: 1px solid var(--groove);
   cursor: pointer;
+  outline: none;
   font-family: inherit;
   color: inherit;
   text-align: center;
