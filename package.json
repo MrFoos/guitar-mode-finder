@@ -1,0 +1,9 @@
+{
+  "name": "guitar-mode-finder",
+  "scripts": {
+    "test": "node --test tests/caged.test.cjs"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}

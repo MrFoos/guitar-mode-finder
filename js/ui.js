@@ -294,20 +294,193 @@
     return p.join('');
   }
 
-  // Per-shape, per-mode window offsets (relative to baseFret) and fret counts.
-  // Modes: Ionian Dorian Phrygian Lydian Mixolydian Aeolian Locrian
-  const CAGED_MODES = ['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian'];
-  const CAGED_WIN = {
-    //       Io   Do   Ph   Ly   Mi   Ae   Lo
-    A: { off: [ 0,   0,   1,   0,   0,   1,   1 ],
-        fret: [ 5,   5,   5,   4,   5,   4,   5 ] },
-    G: { off: [-1,   0,   0,   2,   0,   0,   0 ],
-        fret: [ 5,   4,   5,   4,   4,   5,   5 ] },
-    E: { off: [-1,  -1,   0,  -1,  -3,  -1,   0 ],
-        fret: [ 4,   5,   4,   4,   4,   5,   4 ] },
-    D: { off: [-1,   0,  -1,  -1,  -1,   0,   0 ],
-        fret: [ 5,   4,   5,   5,   5,   4,   5 ] },
-  };
+  // Open-string semitone indices: string 1 (high e) through string 6 (low E)
+  const OPEN_SEMITONES = [4, 11, 7, 2, 9, 4]; // e B G D A E
+
+  function computeCAGEDWindow(shape, root, mode) {
+    const baseFret = CAGED.getShapeFret(shape, root);
+
+    // C-shape: Lydian needs a left-shifted window (G-string at baseFret-2 = #4 above root).
+    // All other modes: open position extends to 4 frets when fret 4 has a scale note;
+    // non-open extends to 5 frets when the minor 3rd (Dorian/Phrygian/Aeolian/Locrian) is in scale.
+    if (shape === 'C') {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      // Lydian is uniquely identified by having both M3 (+4) and #4 (+6) above root.
+      const rootNote = (OPEN_SEMITONES[1] + baseFret) % 12;
+      const isLydian = ns.has((rootNote + 4) % 12) && ns.has((rootNote + 6) % 12);
+      if (isLydian) {
+        if (baseFret === 1) return { winStart: 1, frets: 4, showOpen: true };
+        if (baseFret === 2) return { winStart: 1, frets: 4, showOpen: true };
+        return { winStart: baseFret - 2, frets: 5, showOpen: false };
+      }
+      if (baseFret === 1) {
+        const openNoteSet = new Set(OPEN_SEMITONES);
+        const hasFret4 = OPEN_SEMITONES.some(s => { const semi = (s + 4) % 12; return ns.has(semi) && !openNoteSet.has(semi); });
+        return { winStart: 1, frets: hasFret4 ? 4 : 3, showOpen: true };
+      }
+      // Only extend left if baseFret-1 actually has scale notes (Locrian has none there).
+      if (!OPEN_SEMITONES.some(s => ns.has((s + baseFret - 1) % 12))) {
+        return { winStart: baseFret, frets: 4, showOpen: false };
+      }
+      const hasExtraFret = ns.has((2 + baseFret) % 12);
+      return { winStart: baseFret - 1, frets: hasExtraFret ? 5 : 4, showOpen: false };
+    }
+
+    // D-shape normally shows 5 frets starting one fret before the root. However extend only
+    // when baseFret-1 actually has scale notes — Dorian's interval structure means that fret
+    // is always empty for D shape, so Dorian uses a 4-fret window starting at baseFret.
+    if (shape === 'D') {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      // Extend DOWN if G-string at baseFret-1 has a scale note (major 3rd: Ionian, Lydian, Mixolydian)
+      const gStringPrev = (OPEN_SEMITONES[2] + baseFret - 1) % 12;
+      if (ns.has(gStringPrev)) {
+        if (baseFret === 1) return { winStart: 1, frets: 4, showOpen: true };
+        return { winStart: baseFret - 1, frets: 5, showOpen: false };
+      }
+      // Extend UP if B-string at baseFret+4 has a scale note (b2: Phrygian, Locrian)
+      const bStringTop = (OPEN_SEMITONES[1] + baseFret + 4) % 12;
+      if (ns.has(bStringTop)) return { winStart: baseFret, frets: 5, showOpen: false };
+      // Default 4 frets — no open-string notes warranted (Dorian/Aeolian at baseFret=1)
+      if (baseFret === 1) return { winStart: 1, frets: 4, showOpen: false };
+      return { winStart: baseFret, frets: 4, showOpen: false };
+    }
+
+    // G-shape: root sits on the G-string at baseFret. Extend down to baseFret-1 only when
+    // the G-string note there is in the scale (the major-7th cases: Ionian, Lydian).
+    // For baseFret=1, baseFret-1=0 means the open G string; if it's not in the scale don't
+    // show open strings at all (avoids open B and a trailing empty fret for modes like Dorian).
+    if (shape === 'G') {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      const gStringNote = (OPEN_SEMITONES[2] + baseFret - 1) % 12;
+      if (ns.has(gStringNote)) {
+        // Extend DOWN: major-7th modes (Ionian, Lydian) — leading tone below root on G-string
+        if (baseFret === 1) return { winStart: 1, frets: 4, showOpen: true };
+        return { winStart: baseFret - 1, frets: 5, showOpen: false };
+      }
+      // Extend UP: modes where fret baseFret+4 has ≥2 scale notes (Phrygian, Locrian)
+      const notesAtTop = OPEN_SEMITONES.filter(s => ns.has((s + baseFret + 4) % 12)).length;
+      if (notesAtTop >= 2) return { winStart: baseFret, frets: 5, showOpen: false };
+      return { winStart: baseFret, frets: 4, showOpen: false };
+    }
+
+    // E-shape open position (F root): base is 3 fretted columns, but extend to 4 when
+    // fret 4 has scale notes that are NOT already available as open strings (e.g. Ab/Eb).
+    // Lydian's fret-4 note (B on G string) duplicates the open B string — don't extend.
+    // Locrian: the open B string duplicates G-string fret 4 — skip open strings entirely.
+    if (shape === 'E' && baseFret === 1) {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      const rootSemi = Theory.noteIndex(root);
+      if (ns.has((rootSemi + 1) % 12) && ns.has((rootSemi + 6) % 12)) {
+        return { winStart: 1, frets: 4, showOpen: false };
+      }
+      const openNoteSet = new Set(OPEN_SEMITONES);
+      const hasNewAtFret4 = OPEN_SEMITONES.some(s => { const semi = (s + 4) % 12; return ns.has(semi) && !openNoteSet.has(semi); });
+      return { winStart: 1, frets: hasNewAtFret4 ? 4 : 3, showOpen: true };
+    }
+
+    // E-shape non-open: early-return cases before the scoring algorithm.
+    if (shape === 'E') {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      // No notes at baseFret-1 → start at baseFret (Phrygian, some Locrian).
+      if (!OPEN_SEMITONES.some(s => ns.has((s + baseFret - 1) % 12))) {
+        return { winStart: baseFret, frets: 4, showOpen: false };
+      }
+      // Only B-string has a note at baseFret-1 (Locrian's dim5) → skip it, start at baseFret.
+      const bStringAtPrev = (OPEN_SEMITONES[1] + baseFret - 1) % 12;
+      if (ns.has(bStringAtPrev) && !OPEN_SEMITONES.some((s, i) => i !== 1 && ns.has((s + baseFret - 1) % 12))) {
+        return { winStart: baseFret, frets: 4, showOpen: false };
+      }
+      // Only extend to 5 frets when ≥2 strings have scale notes at baseFret+3, OR when the
+      // B-string has one there (Mixolydian's b7). Lydian's sole note is on the G string — skip.
+      const bStringAtTop = (OPEN_SEMITONES[1] + baseFret + 3) % 12;
+      const notesAtTop = OPEN_SEMITONES.filter(s => ns.has((s + baseFret + 3) % 12)).length;
+      if (notesAtTop < 2 && !ns.has(bStringAtTop)) return { winStart: baseFret - 1, frets: 4, showOpen: false };
+    }
+
+    // A-shape: skip baseFret when it contributes nothing useful to the window.
+    // Phrygian: only B string has a note (b2) — already covered at baseFret+3 on G string.
+    // Aeolian and others: baseFret column is completely empty.
+    // Locrian: has both b2 (+1) and dim5 (+6) — uniquely identifies Locrian. Window starts
+    // at baseFret+1 with 5 frets to capture the dim5 on the B string at the far end.
+    if (shape === 'A') {
+      const ns = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+      const rootSemi = Theory.noteIndex(root);
+      const isLocrian = ns.has((rootSemi + 1) % 12) && ns.has((rootSemi + 6) % 12);
+      if (isLocrian) return { winStart: baseFret + 1, frets: 5, showOpen: false };
+      const bStringAtBase = (OPEN_SEMITONES[1] + baseFret) % 12;
+      const onlyBString = ns.has(bStringAtBase) && !OPEN_SEMITONES.some((s, i) => i !== 1 && ns.has((s + baseFret) % 12));
+      const noneAtBase = !OPEN_SEMITONES.some(s => ns.has((s + baseFret) % 12));
+      if (onlyBString || noneAtBase) {
+        return { winStart: baseFret + 1, frets: 4, showOpen: false };
+      }
+    }
+
+    const rootSemi = Theory.noteIndex(root);
+    const noteSet = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+    const anchorStart = (shape === 'E') ? baseFret - 1 : baseFret;
+    const canShowOpen = baseFret === 1 && shape !== 'C' && shape !== 'A';
+
+    let best = null, bestScore = -Infinity;
+
+    for (let delta = -3; delta <= 2; delta++) {
+      for (let size = 4; size <= 5; size++) {
+        let winStart = anchorStart + delta;
+        let fretCount = size;
+        let showOpen = false;
+
+        if (winStart === 0) {
+          if (!canShowOpen) continue;
+          showOpen = true;
+          winStart = 1;
+        } else if (winStart < 1) {
+          fretCount += winStart - 1;
+          winStart = 1;
+        }
+        if (fretCount < 4) continue;
+
+        const found = new Set();
+        let rootPositions = 0, rootAtStart = 0, rootAtEnd = 0, coveredPositions = 0;
+
+        if (showOpen) {
+          for (let s = 0; s < 6; s++) {
+            const semi = OPEN_SEMITONES[s] % 12;
+            if (noteSet.has(semi)) { found.add(semi); coveredPositions++; }
+            if (semi === rootSemi) rootPositions++;
+          }
+        }
+        for (let f = winStart; f < winStart + fretCount; f++) {
+          for (let s = 0; s < 6; s++) {
+            const semi = (OPEN_SEMITONES[s] + f) % 12;
+            if (noteSet.has(semi)) { found.add(semi); coveredPositions++; }
+            if (semi === rootSemi) {
+              rootPositions++;
+              if (f === winStart) rootAtStart++;
+              if (f === winStart + fretCount - 1) rootAtEnd++;
+            }
+          }
+        }
+
+        if (found.size < 7 || rootPositions === 0) continue;
+
+        const rootAtEdge = rootAtStart + rootAtEnd;
+        const nonEdgeRoots = rootPositions - rootAtEdge;
+        const rootOnlyAtEdge = rootAtEdge > 0 && rootAtEdge === rootPositions;
+        // Extra penalty when root spans both window ends (a sign the window is poorly centred)
+        const rootAtBothEnds = rootAtStart > 0 && rootAtEnd > 0;
+        const edgePenalty = rootOnlyAtEdge ? 10 : (rootAtBothEnds ? 5 : 0);
+        // Open-position windows are not penalised for delta — they sit at their natural anchor
+        const deltaPenalty = showOpen ? 0 : Math.abs(delta) * 6;
+        const score = -size * 3 - deltaPenalty + rootPositions * 5 + nonEdgeRoots * 2 + coveredPositions * 2 - edgePenalty;
+
+        if (score > bestScore) {
+          bestScore = score;
+          best = { winStart, frets: fretCount, showOpen };
+        }
+      }
+    }
+
+    return best ?? { winStart: baseFret, frets: 4, showOpen: false };
+  }
 
   function buildCAGEDShapeSVG(shape, root, mode) {
     const t = currentTheme();
@@ -317,27 +490,7 @@
     const displayNote = {};
     normalizedScale.forEach((norm, i) => { displayNote[norm] = scale[i]; });
 
-    const baseFret = CAGED.getShapeFret(shape, root);
-    const modeIdx = CAGED_MODES.indexOf(mode);
-    let windowStart, frets, showOpen;
-    if (shape === 'C') {
-      if (baseFret === 1) {
-        windowStart = 1; showOpen = true; frets = 4;
-      } else {
-        const prevHasNotes = TUNING.some(open => noteSet.has(noteAt(open, baseFret - 1)));
-        windowStart = prevHasNotes ? baseFret - 1 : baseFret;
-        frets = 4; showOpen = false;
-      }
-    } else {
-      const win = CAGED_WIN[shape];
-      windowStart = baseFret + (win.off[modeIdx] ?? win.off[0]);
-      frets = win.fret[modeIdx] ?? win.fret[0];
-      showOpen = false;
-      if (windowStart < 1) {
-        frets = frets + windowStart - 1;
-        windowStart = 1;
-      }
-    }
+    const { winStart: windowStart, frets, showOpen } = computeCAGEDWindow(shape, root, mode);
     const showNut = windowStart === 1;
 
     const H = 360;
@@ -399,9 +552,13 @@
     // Strings + labels
     TUNING.forEach((s, i) => {
       const y = (padT + i * rowH).toFixed(1);
-      const strStart = showOpen ? openX - 18 : padL - 12;
-      p.push(`<line x1="${strStart}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${(0.7 + i * 0.28).toFixed(2)}"/>`);
-      if (!showOpen) {
+      const sw = (0.7 + i * 0.28).toFixed(2);
+      if (showOpen) {
+        const gap = 18;
+        // String starts after the open indicator, runs through the nut and fretboard
+        p.push(`<line x1="${(openX + gap).toFixed(1)}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
+      } else {
+        p.push(`<line x1="${padL - 12}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
         p.push(`<text x="${padL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
       }
     });
@@ -425,21 +582,38 @@
       p.push(`<text x="${cx}" y="${(parseFloat(cy) + 5).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="${txt}" text-anchor="middle">${disp(label)}</text>`);
     }
 
-    // Open string dots
+    // Open string dots (scale note) or string name label (not in scale)
     if (showOpen) {
       TUNING.forEach((open, si) => {
         const n = noteAt(open, 0);
-        if (!noteSet.has(n)) return;
-        const idx = normalizedScale.indexOf(n);
-        drawDot(openX.toFixed(1), (padT + si * rowH).toFixed(1), n, idx);
+        const cx = openX.toFixed(1);
+        const cy = (padT + si * rowH).toFixed(1);
+        if (noteSet.has(n)) {
+          const idx = normalizedScale.indexOf(n);
+          drawDot(cx, cy, n, idx);
+        } else {
+          p.push(`<text x="${cx}" y="${(padT + si * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${open}</text>`);
+        }
       });
     }
 
     // Fretted note dots
+    // C-shape Lydian open position: the window extends to frets=4 to include F# on D-string.
+    // The last fret may also land a note (e.g. B on G-string) that's already shown as an open
+    // string — suppress those duplicates so the last fret shows only the notes that warranted
+    // the extension.
+    const openScaleNotes = showOpen
+      ? new Set(TUNING.map(open => noteAt(open, 0)).filter(n => noteSet.has(n)))
+      : null;
+    const baseFretForShape = CAGED.getShapeFret(shape, root);
+    const semiSet = new Set(Theory.getModeNotes(root, mode).map(n => Theory.noteIndex(n)));
+    const rootNoteForLydian = (OPEN_SEMITONES[1] + baseFretForShape) % 12;
+    const isLydianShape = semiSet.has((rootNoteForLydian + 4) % 12) && semiSet.has((rootNoteForLydian + 6) % 12);
     TUNING.forEach((open, si) => {
       for (let off = 0; off < frets; off++) {
         const n = noteAt(open, windowStart + off);
         if (!noteSet.has(n)) continue;
+        if (shape === 'C' && showOpen && isLydianShape && off === frets - 1 && openScaleNotes.has(n)) continue;
         const idx = normalizedScale.indexOf(n);
         const cx = (padL + (off + 0.5) * fretW).toFixed(1);
         const cy = (padT + si * rowH).toFixed(1);
