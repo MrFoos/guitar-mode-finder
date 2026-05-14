@@ -852,7 +852,7 @@
 
     const toggle = document.getElementById('themeToggle');
     if (toggle) {
-      toggle.addEventListener('click', () => applyTheme(themeKey === 'night' ? 'day' : 'night'));
+      toggle.onclick = () => applyTheme(themeKey === 'night' ? 'day' : 'night');
     }
 
     if (!isHome) {

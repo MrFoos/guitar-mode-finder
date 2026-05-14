@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback — Guitar Mode Finder</title>
+<meta name="description" content="Report a bug, request a feature, or leave general feedback for Guitar Mode Finder.">
+<link rel="canonical" href="https://guitarmodefinder.com/feedback/">
+<meta property="og:title" content="Feedback — Guitar Mode Finder">
+<meta property="og:description" content="Report a bug, request a feature, or leave general feedback.">
+<meta property="og:url" content="https://guitarmodefinder.com/feedback/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<script>
+(function(){
+  var t=localStorage.getItem('gmf_theme')||'night';
+  if(t==='day')document.documentElement.setAttribute('data-theme','day');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('themeToggle');
+    var lDay=document.getElementById('labelDay');
+    var lNight=document.getElementById('labelNight');
+    function apply(key){
+      document.documentElement.setAttribute('data-theme',key);
+      localStorage.setItem('gmf_theme',key);
+      if(lDay)lDay.classList.toggle('active',key==='day');
+      if(lNight)lNight.classList.toggle('active',key!=='day');
+    }
+    apply(localStorage.getItem('gmf_theme')||'night');
+    if(btn)btn.onclick=function(){apply(document.documentElement.getAttribute('data-theme')==='day'?'night':'day');};
+  });
+}());
+</script>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="/mascot.png" type="image/jpeg">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <a href="/" class="rack-brand" style="text-decoration:none;color:inherit">
+      <img src="/mascot.png" alt="Guitar Mode Finder" class="brand-logo">
+      <div>
+        <span class="brand-label-main">Guitar Mode Finder</span>
+      </div>
+    </a>
+    <nav class="rack-nav">
+      <a href="/guides/modes/">MODE GUIDE</a>
+      <a href="/guides/caged/">CAGED</a>
+      <a href="/about/">ABOUT</a>
+      <a href="/feedback/" class="active">FEEDBACK</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label" id="labelNight">NIGHT</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="doc-banner">
+  <div class="doc-banner-inner">
+    <div class="doc-path">
+      <a href="/">HOME</a><span class="sep">/</span>FEEDBACK
+    </div>
+    <h1 class="doc-title">Send Feedback</h1>
+    <p class="doc-subtitle">Bugs, feature requests, or anything else</p>
+  </div>
+</div>
+
+<main>
+  <div class="doc-body">
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">Leave a Message</h2>
+      <p>
+        Found a bug? Want a feature? Something confusing or missing? All feedback is read and appreciated.
+      </p>
+
+      <form class="doc-form" id="feedbackForm" novalidate>
+
+        <div class="doc-field">
+          <label for="feedbackType">TYPE</label>
+          <select id="feedbackType" name="type" required>
+            <option value="">— Select type —</option>
+            <option value="bug">Bug report</option>
+            <option value="feature">Feature request</option>
+            <option value="content">Content / theory error</option>
+            <option value="general">General feedback</option>
+          </select>
+        </div>
+
+        <div class="doc-field">
+          <label for="feedbackMessage">MESSAGE <span style="color:var(--led-red)">*</span></label>
+          <textarea id="feedbackMessage" name="message" placeholder="Describe the bug, the feature, or what's on your mind…" required></textarea>
+        </div>
+
+        <div class="doc-field">
+          <label for="feedbackEmail">EMAIL <span style="opacity:0.5;font-size:9px;letter-spacing:0.1em">(OPTIONAL — only if you want a reply)</span></label>
+          <input type="email" id="feedbackEmail" name="email" placeholder="your@email.com">
+        </div>
+
+        <div>
+          <button type="submit" class="doc-submit">SEND FEEDBACK</button>
+        </div>
+
+        <div id="feedbackError" style="display:none;font-family:var(--mono);font-size:12px;color:var(--led-red);padding:12px 0;">
+          Something went wrong. Try again, or email directly.
+        </div>
+
+      </form>
+
+      <div class="feedback-success" id="feedbackSuccess">
+        ✓ &nbsp; Feedback received — thank you.
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+<footer class="rack-footer">
+  &copy; 2026 Guitar Mode Finder &nbsp;&middot;&nbsp;
+  <a href="/guides/modes/" style="color:inherit">Modes Guide</a> &nbsp;&middot;&nbsp;
+  <a href="/guides/caged/" style="color:inherit">CAGED Guide</a> &nbsp;&middot;&nbsp;
+  <a href="/about/" style="color:inherit">About</a>
+</footer>
+
+<script src="/js/ui.js" defer></script>
+<script>
+document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const form = e.target;
+  const msg = document.getElementById('feedbackMessage').value.trim();
+  if (!msg) {
+    document.getElementById('feedbackMessage').focus();
+    return;
+  }
+  const payload = {
+    type: document.getElementById('feedbackType').value,
+    message: msg,
+    email: document.getElementById('feedbackEmail').value.trim(),
+  };
+  fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+    .then(function (r) {
+      if (!r.ok) throw new Error('bad response');
+      form.style.display = 'none';
+      document.getElementById('feedbackSuccess').style.display = 'block';
+    })
+    .catch(function () {
+      document.getElementById('feedbackError').style.display = 'block';
+    });
+});
+</script>
+</body>
+</html>
