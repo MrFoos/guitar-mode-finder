@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guitar Modes Explained — Complete Guide | Guitar Mode Finder</title>
+<meta name="description" content="A practical guide to the 7 diatonic guitar modes. Learn Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, and Locrian — their formulas, moods, and how to use them.">
+<link rel="canonical" href="https://guitarmodefinder.com/guides/modes/">
+<meta property="og:title" content="Guitar Modes Explained — Complete Guide">
+<meta property="og:description" content="A practical guide to the 7 diatonic guitar modes — formulas, moods, and how to use them.">
+<meta property="og:url" content="https://guitarmodefinder.com/guides/modes/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<script>
+(function(){
+  var t=localStorage.getItem('gmf_theme')||'night';
+  if(t==='day')document.documentElement.setAttribute('data-theme','day');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('themeToggle');
+    var lDay=document.getElementById('labelDay');
+    var lNight=document.getElementById('labelNight');
+    function apply(key){
+      document.documentElement.setAttribute('data-theme',key);
+      localStorage.setItem('gmf_theme',key);
+      if(lDay)lDay.classList.toggle('active',key==='day');
+      if(lNight)lNight.classList.toggle('active',key!=='day');
+    }
+    apply(localStorage.getItem('gmf_theme')||'night');
+    if(btn)btn.onclick=function(){apply(document.documentElement.getAttribute('data-theme')==='day'?'night':'day');};
+  });
+}());
+</script>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="/mascot.png" type="image/jpeg">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <a href="/" class="rack-brand" style="text-decoration:none;color:inherit">
+      <img src="/mascot.png" alt="Guitar Mode Finder" class="brand-logo">
+      <div>
+        <span class="brand-label-main">Guitar Mode Finder</span>
+      </div>
+    </a>
+    <nav class="rack-nav">
+      <a href="/guides/modes/" class="active">MODE GUIDE</a>
+      <a href="/guides/caged/">CAGED</a>
+      <a href="/about/">ABOUT</a>
+      <a href="/feedback/">FEEDBACK</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label" id="labelNight">NIGHT</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="doc-banner">
+  <div class="doc-banner-inner">
+    <div class="doc-path">
+      <a href="/">HOME</a><span class="sep">/</span>GUIDES<span class="sep">/</span>MODES
+    </div>
+    <h1 class="doc-title">Understanding Guitar Modes</h1>
+    <p class="doc-subtitle">A practical guide to the 7 diatonic modes</p>
+  </div>
+</div>
+
+<main>
+  <div class="doc-body">
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">What Are Modes?</h2>
+      <p>
+        A <strong>mode</strong> is a scale derived from the major scale by starting on a different degree.
+        The C major scale contains the notes C D E F G A B. If you play those same notes but start and end on D,
+        you get D Dorian. Start on E, and you get E Phrygian — and so on for each of the seven degrees.
+      </p>
+      <p>
+        Every mode has the same notes as its <strong>parent major key</strong>, but the relationship between
+        the root and the other notes changes. That shift in starting point changes which intervals are present,
+        which fundamentally changes the sound and mood.
+      </p>
+      <div class="doc-callout">
+        <strong>Example:</strong> C Ionian, D Dorian, E Phrygian, F Lydian, G Mixolydian, A Aeolian, and B Locrian
+        all share the same 7 notes — C D E F G A B. They are all "in the key of C major", but each starts
+        from a different degree and has a completely different character.
+      </div>
+      <p>
+        In practice, a mode is defined by the chord or root note you're playing over. If the band holds a
+        Dm chord and you improvise using C major scale notes, you're playing D Dorian — not C Ionian —
+        because D is your tonal center.
+      </p>
+    </section>
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">The 7 Diatonic Modes</h2>
+      <p>
+        Each mode has a unique interval formula, mood, and set of characteristic notes. Major modes (I, IV, V)
+        have a major third from the root. Minor modes (II, III, VI) have a minor third. Locrian (VII) is
+        diminished — it has both a minor third and a flat fifth.
+      </p>
+
+      <div class="mode-entries">
+
+        <div class="mode-entry major">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Ionian</div>
+            <div class="mode-entry-degree">DEGREE I · MAJOR</div>
+            <div class="mode-entry-formula">1 2 3 4 5 6 7<br>W W H W W W H</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Happy, bright, resolved</div>
+            <div class="mode-entry-desc">
+              The major scale itself. The most familiar sound in Western music. Settled, bright, and
+              completely stable — it always wants to resolve to the root chord. Used in pop, folk,
+              classical, and anywhere you want an uplifting, uncomplicated feeling.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>Let It Be, Happy Birthday, most pop melodies</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry minor">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Dorian</div>
+            <div class="mode-entry-degree">DEGREE II · MINOR</div>
+            <div class="mode-entry-formula">1 2 ♭3 4 5 6 ♭7<br>W H W W W H W</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Cool, jazzy, soulful</div>
+            <div class="mode-entry-desc">
+              A natural minor scale with a raised 6th. That natural 6th gives it a sophisticated,
+              less sorrowful quality than the pure minor scale. It sounds minor but with an optimistic
+              lift. Extremely common in rock, jazz, blues, and funk — one of the most useful modes
+              for improvisation.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>Smoke on the Water, Oye Como Va, Scarborough Fair</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry minor">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Phrygian</div>
+            <div class="mode-entry-degree">DEGREE III · MINOR</div>
+            <div class="mode-entry-formula">1 ♭2 ♭3 4 5 ♭6 ♭7<br>H W W W H W W</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Dark, exotic, tense</div>
+            <div class="mode-entry-desc">
+              The darkest diatonic minor mode. The half-step between the root and ♭2 gives it a
+              distinctly Spanish, Middle-Eastern, or metal flavour. That ♭2 is the mode's defining
+              characteristic note — it creates an immediately recognizable tension. Widely used in
+              flamenco, metal, and film scores that need an ominous edge.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>Wherever I May Roam, flamenco, heavy metal riffs</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry major">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Lydian</div>
+            <div class="mode-entry-degree">DEGREE IV · MAJOR</div>
+            <div class="mode-entry-formula">1 2 3 ♯4 5 6 7<br>W W W H W W H</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Dreamy, ethereal, floating</div>
+            <div class="mode-entry-desc">
+              A major scale with a raised 4th. The ♯4 creates a dreamy, slightly unresolved lift —
+              it sounds like major but with a sense of wonder or weightlessness. The raised 4th
+              is the characteristic note that sets it apart from the plain major scale. Used heavily
+              in film scores, progressive music, and any context that needs a bright, otherworldly feel.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>John Williams themes, "Flying" by The Beatles, prog rock</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry major">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Mixolydian</div>
+            <div class="mode-entry-degree">DEGREE V · MAJOR</div>
+            <div class="mode-entry-formula">1 2 3 4 5 6 ♭7<br>W W H W W H W</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Bluesy, rocky, dominant</div>
+            <div class="mode-entry-desc">
+              A major scale with a flattened 7th. This creates a dominant 7th chord on the tonic,
+              giving it that characteristic blues and rock tension — bright but with a slight pull
+              that never fully resolves. The ♭7 is everything in this mode. It's the default scale
+              for blues, rock, and any music that lives on dominant 7th chords.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>Sweet Home Chicago, Hey Joe, most classic rock and blues</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry minor">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Aeolian</div>
+            <div class="mode-entry-degree">DEGREE VI · MINOR</div>
+            <div class="mode-entry-formula">1 2 ♭3 4 5 ♭6 ♭7<br>W H W W H W W</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Sad, dark, emotional</div>
+            <div class="mode-entry-desc">
+              The natural minor scale. The most common minor scale in Western music. Dark, emotional,
+              and expressive — it carries a sense of longing and sadness. Unlike Dorian, it has a
+              flat 6th, which removes the optimistic lift and makes everything heavier. Used when you
+              want genuine depth, drama, or melancholy.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>Stairway to Heaven (verse), Nothing Else Matters, most minor key ballads</em></div>
+          </div>
+        </div>
+
+        <div class="mode-entry diminished">
+          <div class="mode-entry-left">
+            <div class="mode-entry-name">Locrian</div>
+            <div class="mode-entry-degree">DEGREE VII · DIMINISHED</div>
+            <div class="mode-entry-formula">1 ♭2 ♭3 4 ♭5 ♭6 ♭7<br>H W W H W W W</div>
+          </div>
+          <div class="mode-entry-right">
+            <div class="mode-entry-mood">Unstable, dissonant, tense</div>
+            <div class="mode-entry-desc">
+              The only mode with a diminished tonic chord — the ♭5 makes the tonic chord inherently
+              unstable, so it's almost never used as a tonal center in traditional music. Locrian
+              is dissonant by design. When it does appear, it's for pure tension: avant-garde jazz,
+              metal passages, and experimental music where conventional resolution is deliberately avoided.
+            </div>
+            <div class="mode-entry-examples">Examples: <em>YYZ by Rush, advanced jazz improvisation, experimental metal</em></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">Using Modes in Practice</h2>
+      <p>
+        The most common mistake when learning modes is treating them as entirely separate scales.
+        In reality, <strong>the notes don't change — the context does</strong>. What makes a mode
+        sound like itself is the chord you play it over, not just the notes.
+      </p>
+      <p>
+        The most practical approach: learn the 7 modes by their relationship to the major scale,
+        then practice each over its corresponding chord type. Dorian over minor chords, Mixolydian
+        over dominant 7th chords, Lydian over major 7th chords with a lifted feel.
+      </p>
+      <ul>
+        <li><strong>Start with Ionian and Aeolian</strong> — major and natural minor. Get completely fluent there first.</li>
+        <li><strong>Then add Dorian</strong> — it's Aeolian with a raised 6th and is enormously useful in rock and blues.</li>
+        <li><strong>Then Mixolydian</strong> — essential for blues and anything over a dominant 7th chord.</li>
+        <li><strong>Learn Phrygian and Lydian</strong> once you have solid command of the others — they're more colour-specific.</li>
+        <li><strong>Locrian last</strong> — understand it theoretically, but don't force it.</li>
+      </ul>
+      <div class="doc-callout">
+        <strong>Tip:</strong> Use the <a href="/">Guitar Mode Finder</a> to explore any mode in any key.
+        The CAGED patterns show you where each mode lives on the fretboard across all five positions.
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="rack-footer">
+  &copy; 2026 Guitar Mode Finder &nbsp;&middot;&nbsp;
+  <a href="/guides/caged/" style="color:inherit">CAGED Guide</a> &nbsp;&middot;&nbsp;
+  <a href="/about/" style="color:inherit">About</a> &nbsp;&middot;&nbsp;
+  <a href="/feedback/" style="color:inherit">Feedback</a>
+</footer>
+
+<script src="/js/ui.js" defer></script>
+</body>
+</html>

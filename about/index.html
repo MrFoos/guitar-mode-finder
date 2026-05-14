@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Guitar Mode Finder</title>
+<meta name="description" content="Guitar Mode Finder is a free tool for guitarists to explore modes, scales, fretboard diagrams, and the CAGED system. No ads, no account required.">
+<link rel="canonical" href="https://guitarmodefinder.com/about/">
+<meta property="og:title" content="About — Guitar Mode Finder">
+<meta property="og:description" content="A free tool for guitarists to explore modes, scales, and fretboard diagrams.">
+<meta property="og:url" content="https://guitarmodefinder.com/about/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<script>
+(function(){
+  var t=localStorage.getItem('gmf_theme')||'night';
+  if(t==='day')document.documentElement.setAttribute('data-theme','day');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('themeToggle');
+    var lDay=document.getElementById('labelDay');
+    var lNight=document.getElementById('labelNight');
+    function apply(key){
+      document.documentElement.setAttribute('data-theme',key);
+      localStorage.setItem('gmf_theme',key);
+      if(lDay)lDay.classList.toggle('active',key==='day');
+      if(lNight)lNight.classList.toggle('active',key!=='day');
+    }
+    apply(localStorage.getItem('gmf_theme')||'night');
+    if(btn)btn.onclick=function(){apply(document.documentElement.getAttribute('data-theme')==='day'?'night':'day');};
+  });
+}());
+</script>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="/mascot.png" type="image/jpeg">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+<header class="rack-header">
+  <div class="rack-header-inner">
+    <a href="/" class="rack-brand" style="text-decoration:none;color:inherit">
+      <img src="/mascot.png" alt="Guitar Mode Finder" class="brand-logo">
+      <div>
+        <span class="brand-label-main">Guitar Mode Finder</span>
+      </div>
+    </a>
+    <nav class="rack-nav">
+      <a href="/guides/modes/">MODE GUIDE</a>
+      <a href="/guides/caged/">CAGED</a>
+      <a href="/about/" class="active">ABOUT</a>
+      <a href="/feedback/">FEEDBACK</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night theme">
+        <span class="toggle-label" id="labelDay">DAY</span>
+        <span class="toggle-track"><span class="toggle-ball"></span></span>
+        <span class="toggle-label" id="labelNight">NIGHT</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="doc-banner">
+  <div class="doc-banner-inner">
+    <div class="doc-path">
+      <a href="/">HOME</a><span class="sep">/</span>ABOUT
+    </div>
+    <h1 class="doc-title">Guitar Mode Finder</h1>
+    <p class="doc-subtitle">Free. No ads. No account. Just the fretboard.</p>
+  </div>
+</div>
+
+<main>
+  <div class="doc-body">
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">What Is This?</h2>
+      <p>
+        Guitar Mode Finder is a tool for guitarists who want to understand modes, scales, and
+        the CAGED system — without wading through bloated music theory sites, paywalls, or ads.
+      </p>
+      <p>
+        Pick a key and a mode. The app shows you the notes, the interval formula, the diatonic 7th
+        chords, the pentatonic subset, and a full fretboard diagram — across all five CAGED positions
+        if you want. That's it.
+      </p>
+
+      <div class="about-stats">
+        <div class="about-stat">
+          <div class="about-stat-value">7</div>
+          <div class="about-stat-label">MODES</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-value">12</div>
+          <div class="about-stat-label">KEYS</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-value">84</div>
+          <div class="about-stat-label">COMBINATIONS</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-value">5</div>
+          <div class="about-stat-label">CAGED SHAPES</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">Features</h2>
+      <ul>
+        <li><strong>Interactive mode selector</strong> — choose any of the 7 diatonic modes in all 12 keys</li>
+        <li><strong>Live fretboard diagram</strong> — rendered in real time, shows root, pentatonic, and scale tones</li>
+        <li><strong>Diatonic 7th chords</strong> — the full chord family for any mode, displayed as a chord readout</li>
+        <li><strong>Pentatonic subset</strong> — see which notes form the pentatonic within the mode</li>
+        <li><strong>Scale family browser</strong> — shows all 7 modes that share the same parent key</li>
+        <li><strong>CAGED view</strong> — toggle to see the mode across all five fretboard positions</li>
+        <li><strong>Day / Night theme</strong> — works in any lighting condition</li>
+        <li><strong>No backend, no account</strong> — runs entirely in the browser, zero tracking</li>
+      </ul>
+    </section>
+
+    <section class="doc-section">
+      <h2 class="doc-section-label">About the Project</h2>
+      <p>
+        This tool was built out of personal frustration with existing mode references — either too
+        abstract, too cluttered, or locked behind subscriptions. The goal was a fast, focused tool
+        that a guitarist could pull up mid-practice and immediately use.
+      </p>
+      <p>
+        It's a side project. There are no analytics, no ad networks, no email lists. If something
+        is broken or missing, the <a href="/feedback/">feedback page</a> is the right place to say so.
+      </p>
+      <hr class="doc-divider">
+      <p>
+        Found a bug? Have a feature idea? Something confusing? <a href="/feedback/">Leave feedback</a> —
+        it's read and taken seriously.
+      </p>
+    </section>
+
+  </div>
+</main>
+
+<footer class="rack-footer">
+  &copy; 2026 Guitar Mode Finder &nbsp;&middot;&nbsp;
+  <a href="/guides/modes/" style="color:inherit">Modes Guide</a> &nbsp;&middot;&nbsp;
+  <a href="/guides/caged/" style="color:inherit">CAGED Guide</a> &nbsp;&middot;&nbsp;
+  <a href="/feedback/" style="color:inherit">Feedback</a>
+</footer>
+
+<script src="/js/ui.js" defer></script>
+</body>
+</html>
