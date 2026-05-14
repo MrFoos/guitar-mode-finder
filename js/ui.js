@@ -634,9 +634,8 @@
 
     const shapeNav = document.getElementById('caged-shape-nav');
     if (shapeNav) {
-      shapeNav.style.display = state.cagedMode ? 'flex' : 'none';
       shapeNav.querySelectorAll('.caged-shape-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.shape === state.cagedShape);
+        btn.classList.toggle('active', state.cagedMode && btn.dataset.shape === state.cagedShape);
       });
     }
 
@@ -868,7 +867,8 @@
       cagedToggle.addEventListener('click', () => {
         state.cagedMode = !state.cagedMode;
         state.cagedShape = 'C';
-        cagedToggle.classList.toggle('active', state.cagedMode);
+        cagedToggle.classList.toggle('is-selected', state.cagedMode);
+        cagedToggle.classList.toggle('is-other', !state.cagedMode);
         renderFretboard();
       });
     }
@@ -876,6 +876,11 @@
     document.querySelectorAll('.caged-shape-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         state.cagedShape = btn.dataset.shape;
+        if (!state.cagedMode) {
+          state.cagedMode = true;
+          cagedToggle.classList.add('is-selected');
+          cagedToggle.classList.remove('is-other');
+        }
         renderFretboard();
       });
     });
