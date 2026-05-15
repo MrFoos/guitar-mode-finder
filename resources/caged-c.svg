@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 682 220" width="682" height="220" role="img" aria-label="C C-shape CAGED fretboard diagram">
+<rect width="682" height="220" fill="#111117" rx="6"/>
+<rect x="0.5" y="0.5" width="681" height="219" fill="none" stroke="#242432" stroke-width="1" rx="5.5"/>
+<rect x="112" y="30" width="552" height="154" fill="#16161f" rx="2"/>
+<text x="14" y="18" font-family="system-ui,sans-serif" font-size="12" fill="#7c3aed" font-weight="700" letter-spacing="1">C</text>
+<text x="30" y="18" font-family="system-ui,sans-serif" font-size="12" fill="#5a5a78" font-weight="400"> shape</text>
+<text x="660" y="18" font-family="system-ui,sans-serif" font-size="12" fill="#5a5a78" text-anchor="end">fr 1</text>
+<rect x="112" y="28" width="8" height="158" fill="#5a5a78" rx="2"/>
+<circle cx="570.0" cy="107.0" r="5" fill="#1e1e2e" opacity="0.9"/>
+<line x1="86.0" x2="660" y1="34.0" y2="34.0" stroke="#2e2e42" stroke-width="0.60"/>
+<line x1="86.0" x2="660" y1="63.2" y2="63.2" stroke="#2e2e42" stroke-width="0.82"/>
+<line x1="86.0" x2="660" y1="92.4" y2="92.4" stroke="#2e2e42" stroke-width="1.04"/>
+<line x1="86.0" x2="660" y1="121.6" y2="121.6" stroke="#2e2e42" stroke-width="1.26"/>
+<line x1="86.0" x2="660" y1="150.8" y2="150.8" stroke="#2e2e42" stroke-width="1.48"/>
+<line x1="86.0" x2="660" y1="180.0" y2="180.0" stroke="#2e2e42" stroke-width="1.70"/>
+<line x1="300.0" x2="300.0" y1="30.0" y2="184.0" stroke="#2a2a3e" stroke-width="1.2"/>
+<line x1="480.0" x2="480.0" y1="30.0" y2="184.0" stroke="#2a2a3e" stroke-width="1.2"/>
+<line x1="660.0" x2="660.0" y1="30.0" y2="184.0" stroke="#2a2a3e" stroke-width="1.2"/>
+<text x="210.0" y="208.0" font-family="monospace" font-size="12" fill="#5a5a78" text-anchor="middle">1</text>
+<text x="390.0" y="208.0" font-family="monospace" font-size="12" fill="#5a5a78" text-anchor="middle">2</text>
+<text x="570.0" y="208.0" font-family="monospace" font-size="12" fill="#5a5a78" text-anchor="middle">3</text>
+<circle cx="70.0" cy="34.0" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="70.0" y="38.0" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">E</text>
+<circle cx="70.0" cy="63.2" r="12" fill="#1c1c28" stroke="#3a3a58" stroke-width="0.8"/>
+<text x="70.0" y="67.2" font-family="system-ui,sans-serif" font-size="10" fill="#8888aa" text-anchor="middle" font-weight="700">B</text>
+<circle cx="70.0" cy="92.4" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="70.0" y="96.4" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">G</text>
+<circle cx="70.0" cy="121.6" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="70.0" y="125.6" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">D</text>
+<circle cx="70.0" cy="150.8" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="70.0" y="154.8" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">A</text>
+<circle cx="70.0" cy="180.0" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="70.0" y="184.0" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">E</text>
+<circle cx="210.0" cy="34.0" r="12" fill="#1c1c28" stroke="#3a3a58" stroke-width="0.8"/>
+<text x="210.0" y="38.0" font-family="system-ui,sans-serif" font-size="10" fill="#8888aa" text-anchor="middle" font-weight="700">F</text>
+<circle cx="570.0" cy="34.0" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="570.0" y="38.0" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">G</text>
+<circle cx="210.0" cy="63.2" r="12" fill="#b91c1c" stroke="#ef4444" stroke-width="1.5"/>
+<text x="210.0" y="67.2" font-family="system-ui,sans-serif" font-size="10" fill="white" text-anchor="middle" font-weight="700">C</text>
+<circle cx="570.0" cy="63.2" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="570.0" y="67.2" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">D</text>
+<circle cx="390.0" cy="92.4" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="390.0" y="96.4" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">A</text>
+<circle cx="390.0" cy="121.6" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="390.0" y="125.6" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">E</text>
+<circle cx="570.0" cy="121.6" r="12" fill="#1c1c28" stroke="#3a3a58" stroke-width="0.8"/>
+<text x="570.0" y="125.6" font-family="system-ui,sans-serif" font-size="10" fill="#8888aa" text-anchor="middle" font-weight="700">F</text>
+<circle cx="390.0" cy="150.8" r="12" fill="#1c1c28" stroke="#3a3a58" stroke-width="0.8"/>
+<text x="390.0" y="154.8" font-family="system-ui,sans-serif" font-size="10" fill="#8888aa" text-anchor="middle" font-weight="700">B</text>
+<circle cx="570.0" cy="150.8" r="12" fill="#b91c1c" stroke="#ef4444" stroke-width="1.5"/>
+<text x="570.0" y="154.8" font-family="system-ui,sans-serif" font-size="10" fill="white" text-anchor="middle" font-weight="700">C</text>
+<circle cx="210.0" cy="180.0" r="12" fill="#1c1c28" stroke="#3a3a58" stroke-width="0.8"/>
+<text x="210.0" y="184.0" font-family="system-ui,sans-serif" font-size="10" fill="#8888aa" text-anchor="middle" font-weight="700">F</text>
+<circle cx="570.0" cy="180.0" r="12" fill="#0d2a18" stroke="#4ade80" stroke-width="1.2"/>
+<text x="570.0" y="184.0" font-family="system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="700">G</text>
+</svg>
