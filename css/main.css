@@ -1686,7 +1686,7 @@ main {
 
 .mode-entry {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 228px 1fr;
   border: 1px solid var(--groove);
   border-radius: 3px;
   overflow: hidden;
@@ -1715,24 +1715,42 @@ main {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.15em;
-  color: var(--dim);
+  color: var(--text);
+  opacity: 0.55;
   font-weight: 700;
+  margin-top: 6px;
+  white-space: nowrap;
 }
 
 .mode-entry-formula {
   font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  margin-top: 4px;
-  line-height: 1.5;
+  letter-spacing: 0.08em;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formula-deg {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.formula-int {
+  font-size: 14px;
+  opacity: 0.6;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
 }
 
 .mode-entry.major .mode-entry-name { color: var(--led); text-shadow: 0 0 6px var(--led); }
-.mode-entry.major .mode-entry-formula { color: var(--led); opacity: 0.7; }
+.mode-entry.major .mode-entry-formula { color: var(--led); }
 .mode-entry.minor .mode-entry-name { color: #7ab0ff; }
-.mode-entry.minor .mode-entry-formula { color: #5588ff; opacity: 0.8; }
+.mode-entry.minor .mode-entry-formula { color: #7ab0ff; }
 .mode-entry.diminished .mode-entry-name { color: var(--led-red); }
-.mode-entry.diminished .mode-entry-formula { color: var(--led-red); opacity: 0.7; }
+.mode-entry.diminished .mode-entry-formula { color: var(--led-red); }
 
 .mode-entry-mood {
   font-family: var(--mono);
