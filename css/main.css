@@ -63,6 +63,27 @@
   --row-unsel:   #e8e2d0;
 }
 
+/* ── Skip navigation ────────────────────────────────────────────────────────── */
+
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--bg-deep);
+  color: var(--led);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: 2px solid var(--led);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-nav:focus { top: 16px; outline: none; }
+
 /* ── Reset ──────────────────────────────────────────────────────────────────── */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -207,7 +228,10 @@ a.rack-brand:hover { opacity: 0.82; }
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
   color: inherit;
   font: inherit;
-  outline: none;
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--led);
+  outline-offset: 2px;
 }
 
 [data-theme="day"] .theme-toggle {
@@ -346,7 +370,10 @@ a.rack-brand:hover { opacity: 0.82; }
   width: calc((100% - 60px) / 7);
   flex-shrink: 0;
   margin-right: 20px;
-  outline: none;
+}
+.caged-toggle:focus-visible {
+  outline: 2px solid var(--led);
+  outline-offset: 2px;
 }
 
 .caged-toggle.is-selected {
@@ -375,7 +402,6 @@ a.rack-brand:hover { opacity: 0.82; }
   border: 1px solid var(--groove);
   border-radius: 3px;
   cursor: pointer;
-  outline: none;
   background: radial-gradient(circle at 50% 20%, #363640, #1c1c20);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.10),
@@ -383,6 +409,10 @@ a.rack-brand:hover { opacity: 0.82; }
     0 5px 8px rgba(0,0,0,0.25);
   transform: translateY(0);
   transition: background 0.1s, border-color 0.1s, box-shadow 0.1s, transform 0.1s;
+}
+.caged-shape-btn:focus-visible {
+  outline: 2px solid var(--led);
+  outline-offset: 2px;
 }
 
 [data-theme="day"] .caged-shape-btn {
@@ -506,6 +536,10 @@ a.rack-brand:hover { opacity: 0.82; }
   text-align: center;
   cursor: pointer;
   letter-spacing: 0.05em;
+}
+.knob-select:focus-visible {
+  outline: 2px solid var(--led);
+  outline-offset: 2px;
 }
 
 /* ── CH·01 Layout ───────────────────────────────────────────────────────────── */
@@ -925,7 +959,6 @@ a.rack-brand:hover { opacity: 0.82; }
   border-radius: 3px;
   border: 1px solid var(--groove);
   cursor: pointer;
-  outline: none;
   font-family: inherit;
   color: inherit;
   text-align: center;
@@ -1872,14 +1905,20 @@ main {
   padding: 10px 14px;
   border-radius: 2px;
   width: 100%;
-  outline: none;
   transition: border-color 0.15s;
   -webkit-appearance: none;
 }
 
 .doc-field input:focus,
 .doc-field textarea:focus,
-.doc-field select:focus { border-color: var(--copper); }
+.doc-field select:focus { border-color: var(--copper); outline: none; }
+
+.doc-field input:focus-visible,
+.doc-field textarea:focus-visible,
+.doc-field select:focus-visible {
+  outline: 2px solid var(--led);
+  outline-offset: 2px;
+}
 
 .doc-field textarea { resize: vertical; min-height: 160px; }
 

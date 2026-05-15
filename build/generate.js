@@ -68,6 +68,7 @@ function htmlShell({ title, description, canonicalPath, content }) {
 <script defer src="https://cloud.umami.is/script.js" data-website-id="03d2d735-5b07-40a0-b42c-bfe27f6466f6"></script>
 </head>
 <body>
+<a class="skip-nav" href="#main-content">Skip to content</a>
 ${siteHeader()}
 ${content}
 ${siteFooter()}
@@ -258,7 +259,7 @@ function buildModePage(rootNote, modeName) {
 
   const relatedBody = renderRelatedLinks(rootNote, modeName);
 
-  const content = `<main>
+  const content = `<main id="main-content">
   <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
     ${pageModule(`CH·01 / ${disp(rootNote).toUpperCase()} ${modeName.toUpperCase()}`, heroBody)}
     ${pageModule(`PARENT FAMILY · ${disp(parentRoot)} MAJ`, familyBody)}
@@ -318,7 +319,7 @@ function buildModeIndexPage(modeName) {
 
   const keysBody = `<div class="key-list">${keyLinks}</div>`;
 
-  const content = `<main>
+  const content = `<main id="main-content">
   <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
     ${pageModule(`CH·01 / ${modeName.toUpperCase()} MODE`, heroBody)}
     ${pageModule(`CHARACTER · ${mood.mood.toUpperCase()}`, aboutBody)}
@@ -347,7 +348,7 @@ function buildModesIndexPage() {
 
   const gridBody = `<div class="mode-grid">${modeCards}</div>`;
 
-  const content = `<main>
+  const content = `<main id="main-content">
   <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
     ${pageModule('CH·01 / ALL MODES', heroBody)}
     ${pageModule('BROWSE ALL MODES', gridBody)}
