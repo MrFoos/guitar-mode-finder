@@ -39,6 +39,8 @@
     document.documentElement.setAttribute('data-theme', key === 'day' ? 'day' : 'night');
     localStorage.setItem('gmf_theme', key);
     updateToggleLabels();
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) toggle.setAttribute('aria-pressed', key === 'day' ? 'true' : 'false');
     if (isHome && initialized) render();
   }
 
@@ -140,8 +142,8 @@
     }).join('');
 
     container.innerHTML = `
-      <div class="knob-label">${label}</div>
-      <select class="knob-select">${opts}</select>`;
+      <div class="knob-label" aria-hidden="true">${label}</div>
+      <select class="knob-select" aria-label="${label}">${opts}</select>`;
 
     container.querySelector('select').addEventListener('change', e => onChange(e.target.value));
   }
@@ -869,6 +871,7 @@
         state.cagedShape = 'C';
         cagedToggle.classList.toggle('is-selected', state.cagedMode);
         cagedToggle.classList.toggle('is-other', !state.cagedMode);
+        cagedToggle.setAttribute('aria-pressed', state.cagedMode ? 'true' : 'false');
         renderFretboard();
       });
     }
