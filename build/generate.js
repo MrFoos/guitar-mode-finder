@@ -49,7 +49,7 @@ function disp(n) {
 
 // ── HTML shell ────────────────────────────────────────────────────────────────
 
-function htmlShell({ title, description, canonicalPath, content }) {
+function htmlShell({ title, description, canonicalPath, content, jsonLd = '' }) {
   return `<!DOCTYPE html>
 <html lang="en" data-theme="night">
 <head>
@@ -63,7 +63,7 @@ function htmlShell({ title, description, canonicalPath, content }) {
 <meta property="og:url" content="${SITE_URL}${canonicalPath}">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="/css/main.css">
+${jsonLd}<link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="03d2d735-5b07-40a0-b42c-bfe27f6466f6"></script>
 </head>
@@ -212,6 +212,23 @@ function buildModePage(rootNote, modeName) {
   const description = `${rootNote} ${modeName} uses the notes ${modeData.notes.join(' ')}. Built from ${parentRoot} major. Full fretboard, diatonic 7th chords, and pentatonic scale.`;
   const canonicalPath = `/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(rootNote)}/`;
 
+  const jsonLd = `<script type="application/ld+json">
+${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${rootNote} ${modeName} — Scale, Chords & Fretboard`,
+    description,
+    url: `${SITE_URL}${canonicalPath}`,
+    author:    { '@type': 'Organization', name: 'Guitar Mode Finder', url: SITE_URL },
+    publisher: { '@type': 'Organization', name: 'Guitar Mode Finder', url: SITE_URL },
+    about: {
+      '@type': 'Thing',
+      name: `${rootNote} ${modeName} guitar scale`,
+      description: `${modeData.mood.mood}. Notes: ${modeData.notes.join(', ')}. Diatonic chords: ${getDiatonicChords(rootNote, modeName).map(c => c.name).join(', ')}.`,
+    },
+  }, null, 2)}
+</script>\n`;
+
   const chords = getDiatonicChords(rootNote, modeName);
   const dominantChord = chords.find(c => c.quality === '7');
   const playOverHint = dominantChord
@@ -239,6 +256,11 @@ function buildModePage(rootNote, modeName) {
   const scaleBody = `
     ${renderNotePills(modeData.notes, rootNote, modeData.pentaNotes)}
     <div class="interval-formula">Formula: ${modeData.formula}</div>
+    <p style="font-size:13px;margin-top:10px;color:var(--dim)">
+      The ${modeName} scale on ${disp(rootNote)} contains the notes
+      ${modeData.notes.map(n => `<strong>${disp(n)}</strong>`).join(', ')}.
+      The pentatonic subset is ${modeData.pentaNotes.map(n => disp(n)).join(', ')}.
+    </p>
     <div class="characteristic-note">
       <strong>Characteristic note:</strong> ${modeData.characteristic.description}.
     </div>`;
@@ -249,15 +271,25 @@ function buildModePage(rootNote, modeName) {
 
   const fretboardBody = renderFretboardSection(rootNote, modeData);
 
+  const minorModes = new Set(['Dorian','Phrygian','Aeolian','Locrian']);
+  const chordQuality = minorModes.has(modeName) ? 'minor' : 'major';
   const moodBody = `
     <div class="mood-tag">${modeData.mood.mood.toUpperCase()}</div>
+    <p>${disp(rootNote)} ${modeName} is a ${chordQuality} mode with a ${modeData.mood.mood.toLowerCase()} character.
+    It is the ${romanNumeral(modeData.degreeInParent)} mode of ${disp(parentRoot)} major — it uses the same
+    7 notes as ${disp(parentRoot)} Ionian but is rooted on ${disp(rootNote)}, which shifts the harmonic focus
+    and creates a completely different sound. The tonic chord is <strong>${disp(chords[0].name)}</strong>.</p>
     <h3>Where to use ${disp(rootNote)} ${modeName}</h3>
-    <p>${modeData.mood.usage}</p>
+    <p>${modeData.mood.usage}.</p>
+    <h3>Famous examples</h3>
     <ul class="examples-list-static">
       ${modeData.mood.examples.split(', ').map(ex => `<li>${ex}</li>`).join('\n      ')}
-    </ul>`;
+    </ul>
+    <div class="characteristic-note" style="margin-top:16px">
+      <strong>What makes it distinctive:</strong> ${modeData.characteristic.description}.
+    </div>`;
 
-  const relatedBody = renderRelatedLinks(rootNote, modeName);
+  const relatedBody = renderRelatedLinks(rootNote, modeName, parentRoot);
 
   const content = `<main id="main-content">
   <div class="page-rack" style="max-width:1400px;margin:0 auto;padding:24px 32px 60px;display:flex;flex-direction:column;gap:20px">
@@ -271,10 +303,10 @@ function buildModePage(rootNote, modeName) {
   </div>
 </main>`;
 
-  return htmlShell({ title, description, canonicalPath, content });
+  return htmlShell({ title, description, canonicalPath, content, jsonLd });
 }
 
-function renderRelatedLinks(rootNote, modeName) {
+function renderRelatedLinks(rootNote, modeName, parentRoot) {
   const allRoots = Theory.ALL_ROOTS;
   const currentIdx = allRoots.indexOf(rootNote);
   const prevRoot = allRoots[(currentIdx + 11) % 12];
@@ -288,6 +320,7 @@ function renderRelatedLinks(rootNote, modeName) {
   <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/${Theory.noteSlug(nextRoot)}/">${disp(nextRoot)} ${modeName} →</a>
   <a class="key-chip" href="/modes/${Theory.modeSlug(prevMode)}/${Theory.noteSlug(rootNote)}/">${disp(rootNote)} ${prevMode}</a>
   <a class="key-chip" href="/modes/${Theory.modeSlug(nextMode)}/${Theory.noteSlug(rootNote)}/">${disp(rootNote)} ${nextMode}</a>
+  <a class="key-chip" href="/modes/ionian/${Theory.noteSlug(parentRoot)}/">${disp(parentRoot)} Ionian (parent scale)</a>
   <a class="key-chip" href="/modes/${Theory.modeSlug(modeName)}/">All ${modeName} keys</a>
 </div>`;
 }
