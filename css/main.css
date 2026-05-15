@@ -107,6 +107,7 @@ body {
 
 a { color: var(--led); text-decoration: none; }
 a:hover { text-decoration: underline; }
+[data-theme="day"] a { color: #7a3000; }
 
 /* ── Rack Header ────────────────────────────────────────────────────────────── */
 
@@ -1855,6 +1856,7 @@ main {
   margin-bottom: 10px;
   line-height: 1;
 }
+[data-theme="day"] .caged-shape-card-letter { color: #7a3000; text-shadow: none; }
 
 .caged-shape-card img {
   width: 100%;
