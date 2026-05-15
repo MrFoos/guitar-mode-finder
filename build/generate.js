@@ -65,6 +65,7 @@ function htmlShell({ title, description, canonicalPath, content }) {
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="/css/main.css">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="03d2d735-5b07-40a0-b42c-bfe27f6466f6"></script>
 </head>
 <body>
 ${siteHeader()}
