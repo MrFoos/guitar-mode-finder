@@ -28,3 +28,15 @@ jobs:
             --exclude='package*.json' \
             ./ $VPS_USER@$VPS_HOST:/var/www/guitar-mode-finder/
           rm /tmp/deploy_key
+
+      - name: Restart feedback server
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          echo "$SSH_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "pm2 restart gmf-feedback 2>/dev/null || pm2 start /var/www/guitar-mode-finder/server/feedback.js --name gmf-feedback && pm2 save"
+          rm /tmp/deploy_key
