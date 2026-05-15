@@ -56,9 +56,34 @@ const server = http.createServer((req, res) => {
       console.error('Failed to write feedback:', e.message);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: 'server error' }));
+      return;
     }
+
+    notify(JSON.parse(entry)).catch(e => console.error('Resend error:', e.message));
   });
 });
+
+async function notify(entry) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return;
+  const typeLabel = entry.type || 'general';
+  const replyLine = entry.email ? `Reply-to: ${entry.email}` : 'No reply address given';
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: 'feedback@guitarmodefinder.com',
+      to:   'gardenhagen@gmail.com',
+      subject: `[GMF] New feedback: ${typeLabel}`,
+      text: [
+        `Type:    ${typeLabel}`,
+        `Message: ${entry.message}`,
+        replyLine,
+        `Time:    ${entry.ts}`,
+      ].join('\n'),
+    }),
+  });
+}
 
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`gmf-feedback listening on 127.0.0.1:${PORT}`);
