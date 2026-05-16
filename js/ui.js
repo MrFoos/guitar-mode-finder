@@ -632,7 +632,9 @@
     const svg = state.cagedMode
       ? buildCAGEDShapeSVG(state.cagedShape, state.root, state.mode)
       : buildFretboardSVG(state.root, state.mode);
-    document.getElementById('fretboard-wrap').innerHTML = svg;
+    const wrap = document.getElementById('fretboard-wrap');
+    wrap.classList.toggle('is-caged', state.cagedMode);
+    wrap.innerHTML = svg;
 
     const shapeNav = document.getElementById('caged-shape-nav');
     if (shapeNav) {
