@@ -1981,6 +1981,32 @@ main {
   display: none;
 }
 
+/* ── Hamburger nav toggle ────────────────────────────────────────────────────── */
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--groove);
+  border-radius: 3px;
+  padding: 8px 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--led);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+[data-theme="day"] .nav-toggle span { background: var(--text); }
+
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
@@ -1993,8 +2019,20 @@ main {
 
 @media (max-width: 640px) {
   .rack, main { padding: 16px 16px 40px; }
-  .rack-header-inner { padding: 10px 16px; }
-  .rack-nav { display: none; }
+  .rack-header-inner { padding: 10px 16px; flex-wrap: wrap; }
+  .rack-nav {
+    display: none;
+    width: 100%;
+    order: 3;
+    flex-direction: column;
+    padding: 12px 0 4px;
+    border-top: 1px solid var(--groove);
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .rack-nav.nav-open { display: flex; }
+  .rack-nav a { font-size: 14px; padding: 4px 0; }
+  .nav-toggle { display: flex; }
   .modes-strip { grid-template-columns: repeat(3, 1fr); }
   .chord-pad-grid { grid-template-columns: repeat(3, 1fr); }
   .brand-label-main { font-size: 14px; }
@@ -2004,4 +2042,19 @@ main {
   .mode-entry-left { border-right: none; border-bottom: 1px solid var(--groove); }
   .caged-shape-card-letter { font-size: 26px; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
+  .fretboard-svg-wrap svg { min-width: 700px; }
+  .family-led-modes { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .family-led-mode { font-size: 11px; }
+  .chord-led-row { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .chord-led-cell { padding: 8px 3px; }
+  .chord-led-name { font-size: 11px; }
+  .chord-led-roman { font-size: 8px; }
+  .chord-led-vamp { flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .chord-led-vamp-chords { font-size: 20px; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .scale-strip { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .scale-cell { padding: 10px 4px; }
+  .scale-cell-note { font-size: 22px; }
+  .caged-shape-nav { gap: 5px; }
+  .caged-toggle { width: auto; flex: 1; margin-right: 0; font-size: 11px; letter-spacing: 0.06em; padding: 10px 2px; }
+  .caged-shape-btn { width: auto; flex: 1; }
 }
