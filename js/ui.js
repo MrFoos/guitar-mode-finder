@@ -498,13 +498,13 @@
     const H = 360;
     const padL = showOpen ? 120 : 70;
     const padR = 24, padT = 28, padB = 60;
-    const W = 870;
+    const W = 1400;
     const fretW = (W - padL - padR) / frets;
     const rowH = (H - padT - padB) / 5;
     const openX = padL - 52;
 
     const p = [];
-    p.push(`<svg viewBox="0 0 ${W} ${H}" style="display:block;margin:0 auto;max-width:${W}px;width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">`);
+    p.push(`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`);
     p.push(`<defs>
     <linearGradient id="fb-grad" x1="0" x2="0" y1="0" y2="1">
       <stop offset="0" stop-color="${t.fbTop}"/>
