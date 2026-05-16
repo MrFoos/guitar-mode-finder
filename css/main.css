@@ -2042,7 +2042,7 @@ main {
   .mode-entry-left { border-right: none; border-bottom: 1px solid var(--groove); }
   .caged-shape-card-letter { font-size: 26px; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
-  .fretboard-svg-wrap svg { min-width: 700px; }
+  .fretboard-svg-wrap:not(.is-caged) svg { min-width: 700px; }
   .family-led-modes { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
   .family-led-mode { font-size: 11px; }
   .chord-led-row { grid-template-columns: repeat(7, minmax(0, 1fr)); }
