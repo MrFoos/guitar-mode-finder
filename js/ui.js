@@ -498,10 +498,14 @@
     const H = 360;
     const padL = showOpen ? 120 : 70;
     const padR = 24, padT = 28, padB = 60;
+    const fretW = 160;
+    const W_content = padL + frets * fretW + padR;
     const W = 1400;
-    const fretW = (W - padL - padR) / frets;
+    const xOffset = Math.round((W - W_content) / 2);
+    const eL = padL + xOffset;           // effective left edge, centered in viewBox
+    const stringEnd = eL + frets * fretW; // right edge of fretboard content
     const rowH = (H - padT - padB) / 5;
-    const openX = padL - 52;
+    const openX = eL - 52;
 
     const p = [];
     p.push(`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`);
@@ -519,12 +523,12 @@
     p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="url(#fb-grad)" rx="4"/>`);
 
     if (showOpen) {
-      p.push(`<rect x="${padL - 8}" y="${padT - 6}" width="10" height="${H - padT - padB + 12}" fill="${t.nut}" rx="2"/>`);
+      p.push(`<rect x="${eL - 8}" y="${padT - 6}" width="10" height="${H - padT - padB + 12}" fill="${t.nut}" rx="2"/>`);
     }
 
     // Fret lines
     for (let f = 0; f <= frets; f++) {
-      const x = padL + f * fretW;
+      const x = eL + f * fretW;
       if (!showOpen || f > 0) {
         p.push(`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${padT - 4}" y2="${H - padB + 4}" stroke="${t.fretEdge}" stroke-width="3"/>`);
         p.push(`<line x1="${(x - 0.6).toFixed(1)}" x2="${(x - 0.6).toFixed(1)}" y1="${padT - 4}" y2="${H - padB + 4}" stroke="${t.fretShine}" stroke-width="1"/>`);
@@ -537,7 +541,7 @@
     inlayFrets.forEach(af => {
       const off = af - windowStart;
       if (off >= 0 && off < frets) {
-        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        const cx = (eL + (off + 0.5) * fretW).toFixed(1);
         const cy = (padT + 2.5 * rowH).toFixed(1);
         p.push(`<circle cx="${cx}" cy="${cy}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
       }
@@ -545,7 +549,7 @@
     dblFrets.forEach(af => {
       const off = af - windowStart;
       if (off >= 0 && off < frets) {
-        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        const cx = (eL + (off + 0.5) * fretW).toFixed(1);
         p.push(`<circle cx="${cx}" cy="${(padT + 1.5 * rowH).toFixed(1)}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
         p.push(`<circle cx="${cx}" cy="${(padT + 3.5 * rowH).toFixed(1)}" r="6" fill="${t.inlay}" stroke="${t.inlayEdge}" stroke-width="0.8"/>`);
       }
@@ -558,16 +562,16 @@
       if (showOpen) {
         const gap = 18;
         // String starts after the open indicator, runs through the nut and fretboard
-        p.push(`<line x1="${(openX + gap).toFixed(1)}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
+        p.push(`<line x1="${(openX + gap).toFixed(1)}" x2="${stringEnd}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
       } else {
-        p.push(`<line x1="${padL - 12}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
-        p.push(`<text x="${padL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
+        p.push(`<line x1="${eL - 12}" x2="${stringEnd}" y1="${y}" y2="${y}" stroke="${t.string}" stroke-width="${sw}"/>`);
+        p.push(`<text x="${eL - 26}" y="${(padT + i * rowH + 4).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="600">${s}</text>`);
       }
     });
 
     // Fret numbers (absolute)
     for (let f = 0; f < frets; f++) {
-      const x = (padL + (f + 0.5) * fretW).toFixed(1);
+      const x = (eL + (f + 0.5) * fretW).toFixed(1);
       p.push(`<text x="${x}" y="${(H - padB + 50).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="14" fill="#ffffff" text-anchor="middle">${windowStart + f}</text>`);
     }
 
@@ -617,7 +621,7 @@
         if (!noteSet.has(n)) continue;
         if (shape === 'C' && showOpen && isLydianShape && off === frets - 1 && openScaleNotes.has(n)) continue;
         const idx = normalizedScale.indexOf(n);
-        const cx = (padL + (off + 0.5) * fretW).toFixed(1);
+        const cx = (eL + (off + 0.5) * fretW).toFixed(1);
         const cy = (padT + si * rowH).toFixed(1);
         drawDot(cx, cy, n, idx);
       }
