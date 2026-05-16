@@ -498,8 +498,8 @@
     const H = 360;
     const padL = showOpen ? 120 : 70;
     const padR = 24, padT = 28, padB = 60;
-    const fretW = 160;
-    const W = padL + frets * fretW + padR;
+    const W = 870;
+    const fretW = (W - padL - padR) / frets;
     const rowH = (H - padT - padB) / 5;
     const openX = padL - 52;
 
